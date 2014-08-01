@@ -67,7 +67,7 @@ int main(){
 
 
         stretch_sprite(buffer,title_screen,0,0,SCREEN_W,SCREEN_H);
-        textprintf_ex(buffer,font_48,20,20,makecol(255,255,255),makecol(0,0,0),"3 5 7");
+        textprintf_ex(buffer,font_48,20,20,makecol(0,0,0),-1,"3 5 7");
 
 
 
