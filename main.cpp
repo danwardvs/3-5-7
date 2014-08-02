@@ -70,11 +70,12 @@ void update(){
             if(mouse_b & 1 && collision(mouse_x,mouse_x,(SCREEN_W/2)-150,(SCREEN_W/2)+150, mouse_y,mouse_y,SCREEN_H/2,(SCREEN_H/2)+100)){
                 GAME_STATE=GAME;
                 turn_init=0;
+                turn=player;
             }
         }
 
         if(GAME_STATE==GAME){
-                turn=player;
+
                 draw_sprite(buffer,game_background,0,0);
                 if(three_pile>0)draw_sprite(buffer,stone,0,0);
                 if(three_pile>1)draw_sprite(buffer,stone,100,0);
@@ -131,6 +132,8 @@ void update(){
                         three_pile=three_pile_turn;
                         five_pile=five_pile_turn;
                         seven_pile=seven_pile_turn;
+                        turn=ai;
+
                     }
                     if(three_pile!=three_pile_turn)pile_selected=three_pile_selected;
                     if(five_pile!=five_pile_turn)pile_selected=five_pile_selected;
@@ -140,6 +143,15 @@ void update(){
 
 
 
+                }
+                if(turn==ai){
+                    if(three_pile==3){
+                      if(five_pile==3){
+                        if(seven_pile>0)
+                            if(turn==ai){seven_pile=0; turn=player;}
+                      }
+
+                    }
                 }
 
         }
