@@ -142,8 +142,8 @@ void update(){
                 //Player turn loop, handles the rock clicking
                 if(turn==player){
 
-                    //Debug mode text,not needed anymore
-                    //textprintf_ex(buffer,font_48,400,20,makecol(0,0,0),-1,"%i,%i,%i",three_pile_turn,five_pile_turn,seven_pile_turn);
+                    //Debug mode text
+                    textprintf_ex(buffer,font_48,400,20,makecol(0,0,0),-1,"%i,%i,%i",three_pile_turn,five_pile_turn,seven_pile_turn);
 
                      //Initializes the player's turn,
                      if(turn_init==0){
@@ -203,9 +203,8 @@ void update(){
                     if(three_pile==3){
                       if(five_pile==3){
                         if(seven_pile>0)if(turn==ai){seven_pile=0; end_ai_turn();}
-                      }
 
-                     if(five_pile==2){
+                    }if(five_pile==2){
                         if(seven_pile>1)if(turn==ai){seven_pile=1; end_ai_turn();}
                     }if(five_pile==1){
                         if(seven_pile>2)if(turn==ai){seven_pile=2; end_ai_turn();}
@@ -221,10 +220,43 @@ void update(){
                         if(five_pile==0){if(turn==ai){three_pile=1; end_ai_turn();}}
                     }
                   }if(three_pile==1){
-                    if(seven_pile==0){
-                        if(five_pile>0)if(turn==ai){five_pile=0; end_ai_turn();}
 
-                    }
+                    if(five_pile==5){
+                        if(seven_pile==6)if(turn==ai){seven_pile=4; end_ai_turn();}
+                        if(seven_pile==7)if(turn==ai){seven_pile=4; end_ai_turn();}
+                        if(seven_pile==4)if(turn==ai){five_pile=4; end_ai_turn();}
+                        if(seven_pile==3)if(turn==ai){five_pile=2; end_ai_turn();}
+                        if(seven_pile==5)if(turn==ai){three_pile=0; end_ai_turn();}
+                        if(seven_pile==2)if(turn==ai){five_pile=3; end_ai_turn();}
+                        if(seven_pile==1)if(turn==ai){five_pile=1; end_ai_turn();}
+
+
+                    }if(five_pile==4){
+                        if(seven_pile>5)if(turn==ai){five_pile=0; end_ai_turn();}
+                        if(seven_pile==4)if(turn==ai){three_pile=0; end_ai_turn();}
+                        if(seven_pile==3)if(turn==ai){five_pile=2; end_ai_turn();}
+                        if(seven_pile==2)if(turn==ai){five_pile=3; end_ai_turn();}
+                        if(seven_pile==1)if(turn==ai){five_pile=1; end_ai_turn();}
+
+                    }if(five_pile==3){
+                        if(seven_pile>2)if(turn==ai){seven_pile=2; end_ai_turn();}
+                        if(seven_pile==2)if(turn==ai){seven_pile=1; end_ai_turn();}
+                        if(seven_pile==1)if(turn==ai){five_pile=1; end_ai_turn();}
+
+                    }if(five_pile==2){
+                        if(seven_pile>3)if(turn==ai){seven_pile=3; end_ai_turn();}
+                        if(seven_pile==3)if(turn==ai){five_pile=1; end_ai_turn();}
+                        if(seven_pile==2)if(turn==ai){three_pile=0; end_ai_turn();}
+                        if(seven_pile==1)if(turn==ai){five_pile=1; end_ai_turn();}
+                    }if(five_pile==1){
+                        if(seven_pile>1)if(turn==ai){seven_pile=1; end_ai_turn();}
+                        if(seven_pile==1)if(turn==ai){seven_pile=0; end_ai_turn();}
+                    }if(five_pile==0){
+                        if(seven_pile>0)if(turn==ai){seven_pile=0; end_ai_turn();}
+                        if(seven_pile==0)if(turn==ai){three_pile=0; end_ai_turn();}
+
+
+
                   }if(five_pile==0){
                     if(three_pile==0 && seven_pile>1)if(turn==ai){seven_pile=1; end_ai_turn();}
                     if(three_pile==1 && seven_pile==0)if(turn==ai){three_pile=0; end_ai_turn();}
@@ -234,7 +266,7 @@ void update(){
                   }
                 }
 
-
+                }
         }
 
         //Draw cursor and draw buffer to the screen
