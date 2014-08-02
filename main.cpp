@@ -58,7 +58,11 @@ bool collision(int xMin1, int xMax1, int xMin2, int xMax2, int yMin1, int yMax1,
 }
 
 
+void end_ai_turn(){
+     turn=player;
+     turn_init=0;
 
+}
 
 void update(){
         if(GAME_STATE==MENU){
@@ -129,11 +133,12 @@ void update(){
                         three_pile_turn=three_pile;
                     }
                     if(key[KEY_SPACE]){
-                        three_pile=three_pile_turn;
-                        five_pile=five_pile_turn;
-                        seven_pile=seven_pile_turn;
-                        turn=ai;
-
+                        if(three_pile!=three_pile_turn || five_pile!=five_pile_turn || seven_pile!=seven_pile_turn){
+                            three_pile=three_pile_turn;
+                            five_pile=five_pile_turn;
+                            seven_pile=seven_pile_turn;
+                            turn=ai;
+                        }
                     }
                     if(three_pile!=three_pile_turn)pile_selected=three_pile_selected;
                     if(five_pile!=five_pile_turn)pile_selected=five_pile_selected;
@@ -147,12 +152,32 @@ void update(){
                 if(turn==ai){
                     if(three_pile==3){
                       if(five_pile==3){
-                        if(seven_pile>0)
-                            if(turn==ai){seven_pile=0; turn=player;}
+                        if(seven_pile>0)if(turn==ai){seven_pile=0; end_ai_turn();}
                       }
 
+                     if(five_pile==2){
+                        if(seven_pile>1)if(turn==ai){seven_pile=1; end_ai_turn();}
+                    }if(five_pile==1){
+                        if(seven_pile>2)if(turn==ai){seven_pile=2; end_ai_turn();}
+                    }if(five_pile==0){
+                        if(seven_pile>3)if(turn==ai){seven_pile=3; end_ai_turn();}
                     }
+
+                  }if(three_pile==2){
+                    if(seven_pile==0){
+                        if(five_pile==3){if(turn==ai){five_pile=2; end_ai_turn();}}
+                        if(five_pile==2){if(turn==ai){five_pile=1; end_ai_turn();}}
+                        if(five_pile==1){if(turn==ai){three_pile=0; end_ai_turn();}}
+                        if(five_pile==0){if(turn==ai){three_pile=1; end_ai_turn();}}
+                    }
+                  }if(three_pile==1){
+                    if(seven_pile==0){
+                        if(five_pile==2)if(turn==ai){five_pile=0; end_ai_turn();}
+
+                    }
+                  }
                 }
+
 
         }
 
