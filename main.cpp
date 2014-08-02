@@ -1,6 +1,7 @@
 #include<allegro.h>
 #include<alpng.h>
 
+#define EXIT 0
 #define MENU 1
 #define GAME 2
 
@@ -9,6 +10,8 @@ int GAME_STATE;
 BITMAP* title_screen;
 BITMAP* play_button;
 BITMAP* cursor;
+BITMAP* game_background;
+BITMAP* stone;
 
 BITMAP* buffer;
 
@@ -16,19 +19,47 @@ BITMAP* buffer;
 FONT* font_48;
 FONT* font_24;
 
+
+//Pretty functions!
+void abort_on_error(const char *message){
+	 if (screen != NULL){
+	    set_gfx_mode(GFX_TEXT, 0, 0, 0, 0);
+	 }
+	 allegro_message("%s.\n %s\n", message, allegro_error);
+	 exit(-1);
+}
+bool collision(int xMin1, int xMax1, int xMin2, int xMax2, int yMin1, int yMax1, int yMin2, int yMax2)
+{
+  if (xMin1 < xMax2 && yMin1 < yMax2 && xMin2 < xMax1 && yMin2 < yMax1){
+    return true;
+  }
+  return false;
+}
+
+
+
+
 void update(){
-        if(GAME_STATE=MENU){
+        if(GAME_STATE==MENU){
             stretch_sprite(buffer,title_screen,0,0,SCREEN_W,SCREEN_H);
             textprintf_ex(buffer,font_48,40,20,makecol(0,0,0),-1,"3 5 7");
             textprintf_ex(buffer,font_24,40,90,makecol(0,0,0),-1,"A game of logic and intellect.");
             draw_sprite(buffer,play_button,(SCREEN_W/2)-150,SCREEN_H/2);
 
+            if(mouse_b & 1 && collision(mouse_x,mouse_x,(SCREEN_W/2)-150,(SCREEN_W/2)+150, mouse_y,mouse_y,SCREEN_H/2,(SCREEN_H/2)+100)){
+                GAME_STATE=GAME;
+            }
+        }
 
+        if(GAME_STATE==GAME){
+                draw_sprite(buffer,game_background,0,0);
+                draw_sprite(buffer,stone,0,0);
 
 
         }
-        draw_sprite(buffer,cursor,mouse_x,mouse_y);
 
+
+        draw_sprite(buffer,cursor,mouse_x,mouse_y);
         draw_sprite(screen,buffer,0,0);
 
 
@@ -43,13 +74,6 @@ void update(){
 
 
 
-void abort_on_error(const char *message){
-	 if (screen != NULL){
-	    set_gfx_mode(GFX_TEXT, 0, 0, 0, 0);
-	 }
-	 allegro_message("%s.\n %s\n", message, allegro_error);
-	 exit(-1);
-}
 
 
 void setup(){
@@ -65,6 +89,13 @@ void setup(){
   }
   if(!(cursor = load_bitmap("images/cursor.png",NULL))){
     abort_on_error( "Cannot find images/cursor.png.\n Please check your files and try again.");
+  }
+
+  if(!(game_background = load_bitmap("images/game_background.png",NULL))){
+    abort_on_error( "Cannot find images/game_background.png.\n Please check your files and try again.");
+  }
+  if(!(stone = load_bitmap("images/stone.png",NULL))){
+    abort_on_error( "Cannot find images/stone.png.\n Please check your files and try again.");
   }
 
   FONT *f1, *f2, *f3, *f4, *f5;
@@ -117,7 +148,7 @@ int main(){
   set_window_title("3 5 7");
   setup();
 
-  	while(!key[KEY_ESC]){
+  	while(!key[KEY_ESC] && !GAME_STATE==EXIT){
         update();
   	}
 
