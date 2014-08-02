@@ -19,7 +19,8 @@ BITMAP* title_screen;
 BITMAP* play_button;
 BITMAP* cursor;
 BITMAP* game_background;
-BITMAP* stone;
+BITMAP* stone_1;
+BITMAP* stone_2;
 
 BITMAP* buffer;
 
@@ -32,9 +33,9 @@ int turn_init;
 int pile_selected;
 
 
-int three_pile_turn;
-int five_pile_turn;
-int seven_pile_turn;
+int three_pile_turn=3;
+int five_pile_turn=5;
+int seven_pile_turn=7;
 
 
 int three_pile=3;
@@ -79,25 +80,44 @@ void update(){
         }
 
         if(GAME_STATE==GAME){
+                if(key[KEY_ENTER]){turn=player;}
 
                 draw_sprite(buffer,game_background,0,0);
-                if(three_pile>0)draw_sprite(buffer,stone,0,0);
-                if(three_pile>1)draw_sprite(buffer,stone,100,0);
-                if(three_pile>2)draw_sprite(buffer,stone,200,0);
+                if(three_pile>0)draw_sprite(buffer,stone_1,0,0);
+                if(three_pile>1)draw_sprite(buffer,stone_1,100,0);
+                if(three_pile>2)draw_sprite(buffer,stone_1,200,0);
 
-                if(five_pile>0)draw_sprite(buffer,stone,0,200);
-                if(five_pile>1)draw_sprite(buffer,stone,100,200);
-                if(five_pile>2)draw_sprite(buffer,stone,200,200);
-                if(five_pile>3)draw_sprite(buffer,stone,300,200);
-                if(five_pile>4)draw_sprite(buffer,stone,400,200);
+                if(five_pile>0)draw_sprite(buffer,stone_1,0,200);
+                if(five_pile>1)draw_sprite(buffer,stone_1,100,200);
+                if(five_pile>2)draw_sprite(buffer,stone_1,200,200);
+                if(five_pile>3)draw_sprite(buffer,stone_1,300,200);
+                if(five_pile>4)draw_sprite(buffer,stone_1,400,200);
 
-                if(seven_pile>0)draw_sprite(buffer,stone,0,400);
-                if(seven_pile>1)draw_sprite(buffer,stone,100,400);
-                if(seven_pile>2)draw_sprite(buffer,stone,200,400);
-                if(seven_pile>3)draw_sprite(buffer,stone,300,400);
-                if(seven_pile>4)draw_sprite(buffer,stone,400,400);
-                if(seven_pile>5)draw_sprite(buffer,stone,500,400);
-                if(seven_pile>6)draw_sprite(buffer,stone,600,400);
+                if(seven_pile>0)draw_sprite(buffer,stone_1,0,400);
+                if(seven_pile>1)draw_sprite(buffer,stone_1,100,400);
+                if(seven_pile>2)draw_sprite(buffer,stone_1,200,400);
+                if(seven_pile>3)draw_sprite(buffer,stone_1,300,400);
+                if(seven_pile>4)draw_sprite(buffer,stone_1,400,400);
+                if(seven_pile>5)draw_sprite(buffer,stone_1,500,400);
+                if(seven_pile>6)draw_sprite(buffer,stone_1,600,400);
+
+                if(three_pile_turn>0)draw_sprite(buffer,stone_2,0,0);
+                if(three_pile_turn>1)draw_sprite(buffer,stone_2,100,0);
+                if(three_pile_turn>2)draw_sprite(buffer,stone_2,200,0);
+
+                if(five_pile_turn>0)draw_sprite(buffer,stone_2,0,200);
+                if(five_pile_turn>1)draw_sprite(buffer,stone_2,100,200);
+                if(five_pile_turn>2)draw_sprite(buffer,stone_2,200,200);
+                if(five_pile_turn>3)draw_sprite(buffer,stone_2,300,200);
+                if(five_pile_turn>4)draw_sprite(buffer,stone_2,400,200);
+
+                if(seven_pile_turn>0)draw_sprite(buffer,stone_2,0,400);
+                if(seven_pile_turn>1)draw_sprite(buffer,stone_2,100,400);
+                if(seven_pile_turn>2)draw_sprite(buffer,stone_2,200,400);
+                if(seven_pile_turn>3)draw_sprite(buffer,stone_2,300,400);
+                if(seven_pile_turn>4)draw_sprite(buffer,stone_2,400,400);
+                if(seven_pile_turn>5)draw_sprite(buffer,stone_2,500,400);
+                if(seven_pile_turn>6)draw_sprite(buffer,stone_2,600,400);
 
 
 
@@ -217,8 +237,11 @@ void setup(){
   if(!(game_background = load_bitmap("images/game_background.png",NULL))){
     abort_on_error( "Cannot find images/game_background.png.\n Please check your files and try again.");
   }
-  if(!(stone = load_bitmap("images/stone.bmp",NULL))){
-    abort_on_error( "Cannot find images/stone.png.\n Please check your files and try again.");
+  if(!(stone_1 = load_bitmap("images/stone_1.bmp",NULL))){
+    abort_on_error( "Cannot find images/stone_1.png.\n Please check your files and try again.");
+  }
+  if(!(stone_2 = load_bitmap("images/stone_2.bmp",NULL))){
+    abort_on_error( "Cannot find images/stone_2.png.\n Please check your files and try again.");
   }
 
   FONT *f1, *f2, *f3, *f4, *f5;
