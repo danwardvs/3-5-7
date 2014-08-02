@@ -5,6 +5,14 @@
 #define MENU 1
 #define GAME 2
 
+#define player 1
+#define ai 2
+
+#define none 0
+#define three_pile_selected 1
+#define five_pile_selected 2
+#define seven_pile_selected 3
+
 int GAME_STATE;
 
 BITMAP* title_screen;
@@ -19,6 +27,19 @@ BITMAP* buffer;
 FONT* font_48;
 FONT* font_24;
 
+int turn;
+int turn_init;
+int pile_selected;
+
+
+int three_pile_turn;
+int five_pile_turn;
+int seven_pile_turn;
+
+
+int three_pile=3;
+int five_pile=5;
+int seven_pile=7;
 
 //Pretty functions!
 void abort_on_error(const char *message){
@@ -48,13 +69,78 @@ void update(){
 
             if(mouse_b & 1 && collision(mouse_x,mouse_x,(SCREEN_W/2)-150,(SCREEN_W/2)+150, mouse_y,mouse_y,SCREEN_H/2,(SCREEN_H/2)+100)){
                 GAME_STATE=GAME;
+                turn_init=0;
             }
         }
 
         if(GAME_STATE==GAME){
+                turn=player;
                 draw_sprite(buffer,game_background,0,0);
-                draw_sprite(buffer,stone,0,0);
+                if(three_pile>0)draw_sprite(buffer,stone,0,0);
+                if(three_pile>1)draw_sprite(buffer,stone,100,0);
+                if(three_pile>2)draw_sprite(buffer,stone,200,0);
 
+                if(five_pile>0)draw_sprite(buffer,stone,0,200);
+                if(five_pile>1)draw_sprite(buffer,stone,100,200);
+                if(five_pile>2)draw_sprite(buffer,stone,200,200);
+                if(five_pile>3)draw_sprite(buffer,stone,300,200);
+                if(five_pile>4)draw_sprite(buffer,stone,400,200);
+
+                if(seven_pile>0)draw_sprite(buffer,stone,0,400);
+                if(seven_pile>1)draw_sprite(buffer,stone,100,400);
+                if(seven_pile>2)draw_sprite(buffer,stone,200,400);
+                if(seven_pile>3)draw_sprite(buffer,stone,300,400);
+                if(seven_pile>4)draw_sprite(buffer,stone,400,400);
+                if(seven_pile>5)draw_sprite(buffer,stone,500,400);
+                if(seven_pile>6)draw_sprite(buffer,stone,600,400);
+
+
+
+                if(turn==player){
+
+                    textprintf_ex(buffer,font_48,400,20,makecol(0,0,0),-1,"%i,%i,%i",three_pile_turn,five_pile_turn,seven_pile_turn);
+
+                     if(turn_init==0){
+                        seven_pile_turn=seven_pile;
+                        five_pile_turn=five_pile;
+                        three_pile_turn=three_pile;
+                        turn_init++;
+
+                     }
+                    if(mouse_b & 1 && collision(mouse_x,mouse_x,0,300, mouse_y,mouse_y,0,100)){
+                        if(pile_selected==none || pile_selected==three_pile_selected)
+                            if(three_pile_turn>0)three_pile_turn--;
+                    }
+                    if(mouse_b & 1 && collision(mouse_x,mouse_x,0,500, mouse_y,mouse_y,200,300)){
+                        if(pile_selected==none || pile_selected==five_pile_selected)
+
+                            if(five_pile_turn>0)five_pile_turn--;
+                    }
+                    if(mouse_b & 1 && collision(mouse_x,mouse_x,0,700, mouse_y,mouse_y,400,500)){
+                        if(pile_selected==none || pile_selected==seven_pile_selected)
+                            if(seven_pile_turn>0)seven_pile_turn--;
+                    }
+                    while(mouse_b & 1){}
+
+                    if(mouse_b & 2){
+                        seven_pile_turn=seven_pile;
+                        five_pile_turn=five_pile;
+                        three_pile_turn=three_pile;
+                    }
+                    if(key[KEY_SPACE]){
+                        three_pile=three_pile_turn;
+                        five_pile=five_pile_turn;
+                        seven_pile=seven_pile_turn;
+                    }
+                    if(three_pile!=three_pile_turn)pile_selected=three_pile_selected;
+                    if(five_pile!=five_pile_turn)pile_selected=five_pile_selected;
+                    if(seven_pile!=seven_pile_turn)pile_selected=seven_pile_selected;
+                    if(three_pile==three_pile_turn && five_pile==five_pile_turn && seven_pile==seven_pile_turn)pile_selected=none;
+
+
+
+
+                }
 
         }
 
@@ -94,7 +180,7 @@ void setup(){
   if(!(game_background = load_bitmap("images/game_background.png",NULL))){
     abort_on_error( "Cannot find images/game_background.png.\n Please check your files and try again.");
   }
-  if(!(stone = load_bitmap("images/stone.png",NULL))){
+  if(!(stone = load_bitmap("images/stone.bmp",NULL))){
     abort_on_error( "Cannot find images/stone.png.\n Please check your files and try again.");
   }
 
