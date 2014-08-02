@@ -13,8 +13,11 @@
 #define five_pile_selected 2
 #define seven_pile_selected 3
 
+//Handles the state of the game, menu, game, exiting
 int GAME_STATE;
 
+
+//Declare bitmaps
 BITMAP* title_screen;
 BITMAP* play_button;
 BITMAP* cursor;
@@ -24,10 +27,11 @@ BITMAP* stone_2;
 
 BITMAP* buffer;
 
-
+//Declare fonts
 FONT* font_48;
 FONT* font_24;
 
+//Declare game variables
 int turn;
 int turn_init;
 int pile_selected;
@@ -42,7 +46,7 @@ int three_pile=3;
 int five_pile=5;
 int seven_pile=7;
 
-//Pretty functions!
+//A function that handles error messages
 void abort_on_error(const char *message){
 	 if (screen != NULL){
 	    set_gfx_mode(GFX_TEXT, 0, 0, 0, 0);
@@ -50,6 +54,8 @@ void abort_on_error(const char *message){
 	 allegro_message("%s.\n %s\n", message, allegro_error);
 	 exit(-1);
 }
+
+//A function for collision, used for mouse clicking
 bool collision(int xMin1, int xMax1, int xMin2, int xMax2, int yMin1, int yMax1, int yMin2, int yMax2)
 {
   if (xMin1 < xMax2 && yMin1 < yMax2 && xMin2 < xMax1 && yMin2 < yMax1){
@@ -58,20 +64,25 @@ bool collision(int xMin1, int xMax1, int xMin2, int xMax2, int yMin1, int yMax1,
   return false;
 }
 
-
+//Function called when the AI makes a move
 void end_ai_turn(){
      turn=player;
      turn_init=0;
 
 }
 
+//Update loop, is ran every frame
 void update(){
+        //Main menu loop
         if(GAME_STATE==MENU){
+
+            //Draw the main menu and the title text
             stretch_sprite(buffer,title_screen,0,0,SCREEN_W,SCREEN_H);
             textprintf_ex(buffer,font_48,40,20,makecol(0,0,0),-1,"3 5 7");
             textprintf_ex(buffer,font_24,40,90,makecol(0,0,0),-1,"A game of logic and intellect.");
             draw_sprite(buffer,play_button,(SCREEN_W/2)-150,SCREEN_H/2);
 
+            //Play button clicking
             if(mouse_b & 1 && collision(mouse_x,mouse_x,(SCREEN_W/2)-150,(SCREEN_W/2)+150, mouse_y,mouse_y,SCREEN_H/2,(SCREEN_H/2)+100)){
                 GAME_STATE=GAME;
                 turn_init=0;
@@ -79,10 +90,17 @@ void update(){
             }
         }
 
+        //Game loop, handles the actual game
         if(GAME_STATE==GAME){
-                if(key[KEY_ENTER]){turn=player;}
+                //Moves the turn to the player, if AI has no move (DEBUG ONLY!!)
+                if(key[KEY_ENTER])turn=player;
 
+                //Draw background for game
                 draw_sprite(buffer,game_background,0,0);
+
+                //Draw two semi transparent layers
+
+                //This layer doesn't change until the turn ends
                 if(three_pile>0)draw_sprite(buffer,stone_1,0,0);
                 if(three_pile>1)draw_sprite(buffer,stone_1,100,0);
                 if(three_pile>2)draw_sprite(buffer,stone_1,200,0);
@@ -101,6 +119,7 @@ void update(){
                 if(seven_pile>5)draw_sprite(buffer,stone_1,500,400);
                 if(seven_pile>6)draw_sprite(buffer,stone_1,600,400);
 
+                //This layer changes when you are still working on a turn
                 if(three_pile_turn>0)draw_sprite(buffer,stone_2,0,0);
                 if(three_pile_turn>1)draw_sprite(buffer,stone_2,100,0);
                 if(three_pile_turn>2)draw_sprite(buffer,stone_2,200,0);
@@ -120,11 +139,13 @@ void update(){
                 if(seven_pile_turn>6)draw_sprite(buffer,stone_2,600,400);
 
 
-
+                //Player turn loop, handles the rock clicking
                 if(turn==player){
 
-                    textprintf_ex(buffer,font_48,400,20,makecol(0,0,0),-1,"%i,%i,%i",three_pile_turn,five_pile_turn,seven_pile_turn);
+                    //Debug mode text,not needed anymore
+                    //textprintf_ex(buffer,font_48,400,20,makecol(0,0,0),-1,"%i,%i,%i",three_pile_turn,five_pile_turn,seven_pile_turn);
 
+                     //Initializes the player's turn,
                      if(turn_init==0){
                         seven_pile_turn=seven_pile;
                         five_pile_turn=five_pile;
@@ -132,26 +153,33 @@ void update(){
                         turn_init++;
 
                      }
+                    //Clicking on the three pile
                     if(mouse_b & 1 && collision(mouse_x,mouse_x,0,300, mouse_y,mouse_y,0,100)){
                         if(pile_selected==none || pile_selected==three_pile_selected)
                             if(three_pile_turn>0)three_pile_turn--;
                     }
+                    //Clicking on the five pile
                     if(mouse_b & 1 && collision(mouse_x,mouse_x,0,500, mouse_y,mouse_y,200,300)){
                         if(pile_selected==none || pile_selected==five_pile_selected)
 
                             if(five_pile_turn>0)five_pile_turn--;
                     }
+                    //Clicking on the seven pile
                     if(mouse_b & 1 && collision(mouse_x,mouse_x,0,700, mouse_y,mouse_y,400,500)){
                         if(pile_selected==none || pile_selected==seven_pile_selected)
                             if(seven_pile_turn>0)seven_pile_turn--;
                     }
+
+                    //Wait until the mouse is let up to continue game
                     while(mouse_b & 1){}
 
+                    //Right click to reset piles
                     if(mouse_b & 2){
                         seven_pile_turn=seven_pile;
                         five_pile_turn=five_pile;
                         three_pile_turn=three_pile;
                     }
+                    //Ends turn if there is a rock taken
                     if(key[KEY_SPACE]){
                         if(three_pile!=three_pile_turn || five_pile!=five_pile_turn || seven_pile!=seven_pile_turn){
                             three_pile=three_pile_turn;
@@ -160,6 +188,7 @@ void update(){
                             turn=ai;
                         }
                     }
+                    //Sets the pile_selected variable if there is a rock taken from that pile
                     if(three_pile!=three_pile_turn)pile_selected=three_pile_selected;
                     if(five_pile!=five_pile_turn)pile_selected=five_pile_selected;
                     if(seven_pile!=seven_pile_turn)pile_selected=seven_pile_selected;
@@ -169,6 +198,7 @@ void update(){
 
 
                 }
+                //AI turn loop
                 if(turn==ai){
                     if(three_pile==3){
                       if(five_pile==3){
@@ -192,16 +222,22 @@ void update(){
                     }
                   }if(three_pile==1){
                     if(seven_pile==0){
-                        if(five_pile==2)if(turn==ai){five_pile=0; end_ai_turn();}
+                        if(five_pile>0)if(turn==ai){five_pile=0; end_ai_turn();}
 
                     }
+                  }if(five_pile==0){
+                    if(three_pile==0 && seven_pile>1)if(turn==ai){seven_pile=1; end_ai_turn();}
+                    if(three_pile==1 && seven_pile==0)if(turn==ai){three_pile=0; end_ai_turn();}
+                    if(three_pile==1 && seven_pile>0)if(turn==ai){seven_pile=0; end_ai_turn();}
+                    if(three_pile>1 && seven_pile==1)if(turn==ai){three_pile=0; end_ai_turn();}
+
                   }
                 }
 
 
         }
 
-
+        //Draw cursor and draw buffer to the screen
         draw_sprite(buffer,cursor,mouse_x,mouse_y);
         draw_sprite(screen,buffer,0,0);
 
@@ -221,8 +257,10 @@ void update(){
 
 void setup(){
 
+    //The game starts in the main menu
     GAME_STATE=MENU;
 
+    //Load in the bitmaps, and abort on error if they don't exist
   if(!(title_screen = load_bitmap("images/title_screen.png",NULL))){
     abort_on_error( "Cannot find images/title_screen.png.\n Please check your files and try again.");
   }
@@ -244,6 +282,7 @@ void setup(){
     abort_on_error( "Cannot find images/stone_2.png.\n Please check your files and try again.");
   }
 
+  //Load .pcx and convert them into a font
   FONT *f1, *f2, *f3, *f4, *f5;
 
   if(!(f1 = load_font("fonts/font_48.pcx", NULL, NULL))){
