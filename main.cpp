@@ -8,6 +8,10 @@
 #define player 1
 #define ai 2
 
+#define playing 1
+#define ai_win  2
+#define player_win 3
+
 #define none 0
 #define three_pile_selected 1
 #define five_pile_selected 2
@@ -16,6 +20,8 @@
 //Handles the state of the game, menu, game, exiting
 int GAME_STATE;
 
+//Game ending
+int game_ending = playing;
 
 //Declare bitmaps
 BITMAP* title_screen;
@@ -93,10 +99,30 @@ void update(){
         //Game loop, handles the actual game
         if(GAME_STATE==GAME){
                 //Moves the turn to the player, if AI has no move (DEBUG ONLY!!)
-                if(key[KEY_ENTER])turn=player;
+
+                //Debug code, keep scrolling
+                //if(key[KEY_ENTER])turn=player;
+
+                if(key[KEY_ENTER]){
+                    three_pile=3;
+                    five_pile=5;
+                    seven_pile=7;
+                    three_pile_turn=3;
+                    five_pile_turn=5;
+                    seven_pile_turn=7;
+                    game_ending=playing;
+                    turn=player;
+                    turn_init=0;
+
+                }
 
                 //Draw background for game
                 draw_sprite(buffer,game_background,0,0);
+
+                if(game_ending==ai_win)textprintf_ex(buffer,font_48,400,20,makecol(0,0,0),-1,"Player wins!");
+                if(game_ending==player_win)textprintf_ex(buffer,font_48,400,20,makecol(0,0,0),-1,"AI wins!");
+
+
 
                 //Draw two semi transparent layers
 
@@ -186,6 +212,9 @@ void update(){
                             five_pile=five_pile_turn;
                             seven_pile=seven_pile_turn;
                             turn=ai;
+                            if(three_pile+five_pile+seven_pile==0){
+                                game_ending=ai_win;
+                            }
                         }
                     }
                     //Sets the pile_selected variable if there is a rock taken from that pile
@@ -356,7 +385,7 @@ void update(){
 
 
                     }if(five_pile==2){
-                        if(seven_pile>2)if(turn==ai){seven_pile=3; end_ai_turn();}
+                        if(seven_pile>2)if(turn==ai){seven_pile=2; end_ai_turn();}
                         if(seven_pile==2)if(turn==ai){five_pile=2; end_ai_turn();}
                         if(seven_pile==1)if(turn==ai){five_pile=0; end_ai_turn();}
                         if(seven_pile==0)if(turn==ai){five_pile=1; end_ai_turn();}
@@ -371,6 +400,10 @@ void update(){
 
 
                 }
+
+            if(three_pile+five_pile+seven_pile==0){
+                game_ending=player_win;
+            }
 
             }
         }
