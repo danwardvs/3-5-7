@@ -212,7 +212,7 @@ void update(){
                             five_pile=five_pile_turn;
                             seven_pile=seven_pile_turn;
                             turn=ai;
-                            if(three_pile+five_pile+seven_pile==0){
+                            if(three_pile+five_pile+seven_pile==0 && game_ending==playing){
                                 game_ending=ai_win;
                             }
                         }
@@ -369,7 +369,7 @@ void update(){
                         if(seven_pile==0)if(turn==ai){five_pile=1; end_ai_turn();}
                     }if(five_pile==4){
                         if(seven_pile>4)if(turn==ai){seven_pile=4; end_ai_turn();}
-                        if(seven_pile==4)if(turn==ai){five_pile=4; end_ai_turn();}
+                        if(seven_pile==4)if(turn==ai){five_pile=3; end_ai_turn();}
                         if(seven_pile==3)if(turn==ai){five_pile=3; end_ai_turn();}
                         if(seven_pile==2)if(turn==ai){five_pile=2; end_ai_turn();}
                         if(seven_pile==1)if(turn==ai){five_pile=0; end_ai_turn();}
@@ -377,7 +377,7 @@ void update(){
 
                     }if(five_pile==3){
                         if(seven_pile>3)if(turn==ai){seven_pile=3; end_ai_turn();}
-                        if(seven_pile==3)if(turn==ai){five_pile=3; end_ai_turn();}
+                        if(seven_pile==3)if(turn==ai){five_pile=2; end_ai_turn();}
                         if(seven_pile==2)if(turn==ai){five_pile=2; end_ai_turn();}
                         if(seven_pile==1)if(turn==ai){five_pile=0; end_ai_turn();}
                         if(seven_pile==0)if(turn==ai){five_pile=1; end_ai_turn();}
@@ -386,7 +386,7 @@ void update(){
 
                     }if(five_pile==2){
                         if(seven_pile>2)if(turn==ai){seven_pile=2; end_ai_turn();}
-                        if(seven_pile==2)if(turn==ai){five_pile=2; end_ai_turn();}
+                        if(seven_pile==2)if(turn==ai){five_pile=1; end_ai_turn();}
                         if(seven_pile==1)if(turn==ai){five_pile=0; end_ai_turn();}
                         if(seven_pile==0)if(turn==ai){five_pile=1; end_ai_turn();}
 
