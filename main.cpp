@@ -72,9 +72,12 @@ bool collision(int xMin1, int xMax1, int xMin2, int xMax2, int yMin1, int yMax1,
 
 //Function called when the AI makes a move
 void end_ai_turn(){
-     turn=player;
-     turn_init=0;
-
+     if(three_pile+five_pile+seven_pile==0){
+        game_ending=player_win;
+      }else{
+        turn=player;
+        turn_init=0;
+      }
 }
 
 //Update loop, is ran every frame
@@ -119,8 +122,8 @@ void update(){
                 //Draw background for game
                 draw_sprite(buffer,game_background,0,0);
 
-                if(game_ending==ai_win)textprintf_ex(buffer,font_48,400,20,makecol(0,0,0),-1,"Player wins!");
-                if(game_ending==player_win)textprintf_ex(buffer,font_48,400,20,makecol(0,0,0),-1,"AI wins!");
+                if(game_ending==player_win)textprintf_ex(buffer,font_48,400,20,makecol(0,0,0),-1,"Player wins!");
+                if(game_ending==ai_win)textprintf_ex(buffer,font_48,400,20,makecol(0,0,0),-1,"AI wins!");
 
 
 
@@ -146,24 +149,26 @@ void update(){
                 if(seven_pile>6)draw_sprite(buffer,stone_1,600,400);
 
                 //This layer changes when you are still working on a turn
-                if(three_pile_turn>0)draw_sprite(buffer,stone_2,0,0);
-                if(three_pile_turn>1)draw_sprite(buffer,stone_2,100,0);
-                if(three_pile_turn>2)draw_sprite(buffer,stone_2,200,0);
+                //It doesn't render if the game has ended
+                 if(game_ending==playing){
+                    if(three_pile_turn>0)draw_sprite(buffer,stone_2,0,0);
+                    if(three_pile_turn>1)draw_sprite(buffer,stone_2,100,0);
+                    if(three_pile_turn>2)draw_sprite(buffer,stone_2,200,0);
 
-                if(five_pile_turn>0)draw_sprite(buffer,stone_2,0,200);
-                if(five_pile_turn>1)draw_sprite(buffer,stone_2,100,200);
-                if(five_pile_turn>2)draw_sprite(buffer,stone_2,200,200);
-                if(five_pile_turn>3)draw_sprite(buffer,stone_2,300,200);
-                if(five_pile_turn>4)draw_sprite(buffer,stone_2,400,200);
+                    if(five_pile_turn>0)draw_sprite(buffer,stone_2,0,200);
+                    if(five_pile_turn>1)draw_sprite(buffer,stone_2,100,200);
+                    if(five_pile_turn>2)draw_sprite(buffer,stone_2,200,200);
+                    if(five_pile_turn>3)draw_sprite(buffer,stone_2,300,200);
+                    if(five_pile_turn>4)draw_sprite(buffer,stone_2,400,200);
 
-                if(seven_pile_turn>0)draw_sprite(buffer,stone_2,0,400);
-                if(seven_pile_turn>1)draw_sprite(buffer,stone_2,100,400);
-                if(seven_pile_turn>2)draw_sprite(buffer,stone_2,200,400);
-                if(seven_pile_turn>3)draw_sprite(buffer,stone_2,300,400);
-                if(seven_pile_turn>4)draw_sprite(buffer,stone_2,400,400);
-                if(seven_pile_turn>5)draw_sprite(buffer,stone_2,500,400);
-                if(seven_pile_turn>6)draw_sprite(buffer,stone_2,600,400);
-
+                    if(seven_pile_turn>0)draw_sprite(buffer,stone_2,0,400);
+                    if(seven_pile_turn>1)draw_sprite(buffer,stone_2,100,400);
+                    if(seven_pile_turn>2)draw_sprite(buffer,stone_2,200,400);
+                    if(seven_pile_turn>3)draw_sprite(buffer,stone_2,300,400);
+                    if(seven_pile_turn>4)draw_sprite(buffer,stone_2,400,400);
+                    if(seven_pile_turn>5)draw_sprite(buffer,stone_2,500,400);
+                    if(seven_pile_turn>6)draw_sprite(buffer,stone_2,600,400);
+                 }
 
                 //Player turn loop, handles the rock clicking
                 if(turn==player){
@@ -327,7 +332,8 @@ void update(){
                         if(seven_pile==1)if(turn==ai){five_pile=1; end_ai_turn();}
 
                     }if(five_pile==4){
-                        if(seven_pile>5)if(turn==ai){five_pile=0; end_ai_turn();}
+                        if(seven_pile==7)if(turn==ai){five_pile=0; end_ai_turn();}
+                        if(seven_pile==6)if(turn==ai){seven_pile=5; end_ai_turn();}
                         if(seven_pile==5)if(turn==ai){seven_pile=4; end_ai_turn();}
                         if(seven_pile==4)if(turn==ai){three_pile=0; end_ai_turn();}
                         if(seven_pile==3)if(turn==ai){five_pile=2; end_ai_turn();}
@@ -401,9 +407,7 @@ void update(){
 
                 }
 
-            if(three_pile+five_pile+seven_pile==0){
-                game_ending=player_win;
-            }
+
 
             }
         }
