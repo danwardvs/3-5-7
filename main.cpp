@@ -523,7 +523,7 @@ int main(){
   install_keyboard();
   install_mouse();
   set_color_depth(32);
-  set_gfx_mode(GFX_AUTODETECT, 320, 240, 0, 0);
+  set_gfx_mode(GFX_AUTODETECT, 1280, 1024, 0, 0);
   install_sound(DIGI_AUTODETECT,MIDI_AUTODETECT,".");
   if(SCREEN_W<3840)GUI_SCALE=1;
   if(SCREEN_W<1921)GUI_SCALE=2;
