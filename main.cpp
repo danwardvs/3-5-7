@@ -39,7 +39,11 @@ BITMAP* buffer;
 
 //Declare fonts
 FONT* font_48;
+FONT* font_34;
 FONT* font_24;
+FONT* font_14;
+FONT* font_10;
+FONT* font_20;
 
 //Declare game variables
 int turn;
@@ -104,8 +108,15 @@ void update(){
 
             //Draw the main menu and the title text
             stretch_sprite(buffer,title_screen,0,0,SCREEN_W,SCREEN_H);
-            textprintf_ex(buffer,font_48,40,20,makecol(0,0,0),-1,"3 5 7");
-            textprintf_ex(buffer,font_24,40,90,makecol(0,0,0),-1,"A game of logic and intellect.");
+            //textprintf_ex(buffer,font_48,40,20,makecol(0,0,0),-1,"3 5 7");
+            //textprintf_ex(buffer,font_24,40,90,makecol(0,0,0),-1,"A game of logic and intellect.");
+            if(GUI_SCALE==9)textprintf_ex(buffer,font_14,90/GUI_SCALE,180/GUI_SCALE,makecol(0,0,0),-1,"A game of logic and intellect.");
+            if(GUI_SCALE==8)textprintf_ex(buffer,font_20,90/GUI_SCALE,180/GUI_SCALE,makecol(0,0,0),-1,"A game of logic and intellect.");
+            if(GUI_SCALE==7)textprintf_ex(buffer,font_24,90/GUI_SCALE,180/GUI_SCALE,makecol(0,0,0),-1,"A game of logic and intellect.");
+            if(GUI_SCALE==6)textprintf_ex(buffer,font_34,90/GUI_SCALE,180/GUI_SCALE,makecol(0,0,0),-1,"A game of logic and intellect.");
+
+
+
             draw_sprite(buffer,play_button,(SCREEN_W/2)-150,SCREEN_H/2);
             stretch_sprite(buffer,settings,SCREEN_W-(800/GUI_SCALE),SCREEN_H-(800/GUI_SCALE),800/GUI_SCALE,800/GUI_SCALE);
 
@@ -502,6 +513,48 @@ void setup(){
   //Merge temporary fonts to create "pixelart"
   font_24 = merge_fonts(f4, f5 = merge_fonts(f2, f3));
 
+   if(!(f1 = load_font("fonts/font_10.pcx", NULL, NULL))){
+    abort_on_error( "Cannot find fonts/font_10.pcx \n Please check your files and try again");
+  }
+  f2 = extract_font_range(f1, ' ', 'A'-1);
+  f3 = extract_font_range(f1, 'A', 'Z');
+  f4 = extract_font_range(f1, 'Z'+1, 'z');
+
+  //Merge temporary fonts to create "pixelart"
+  font_10 = merge_fonts(f4, f5 = merge_fonts(f2, f3));
+
+  if(!(f1 = load_font("fonts/font_14.pcx", NULL, NULL))){
+    abort_on_error( "Cannot find fonts/font_14.pcx \n Please check your files and try again");
+  }
+  f2 = extract_font_range(f1, ' ', 'A'-1);
+  f3 = extract_font_range(f1, 'A', 'Z');
+  f4 = extract_font_range(f1, 'Z'+1, 'z');
+
+  //Merge temporary fonts to create "pixelart"
+  font_14 = merge_fonts(f4, f5 = merge_fonts(f2, f3));
+
+    if(!(f1 = load_font("fonts/font_34.pcx", NULL, NULL))){
+    abort_on_error( "Cannot find fonts/font_34.pcx \n Please check your files and try again");
+  }
+  f2 = extract_font_range(f1, ' ', 'A'-1);
+  f3 = extract_font_range(f1, 'A', 'Z');
+  f4 = extract_font_range(f1, 'Z'+1, 'z');
+
+  //Merge temporary fonts to create "pixelart"
+  font_34 = merge_fonts(f4, f5 = merge_fonts(f2, f3));
+    font_14 = merge_fonts(f4, f5 = merge_fonts(f2, f3));
+
+
+  if(!(f1 = load_font("fonts/font_20.pcx", NULL, NULL))){
+    abort_on_error( "Cannot find fonts/font_20.pcx \n Please check your files and try again");
+  }
+  f2 = extract_font_range(f1, ' ', 'A'-1);
+  f3 = extract_font_range(f1, 'A', 'Z');
+  f4 = extract_font_range(f1, 'Z'+1, 'z');
+
+  //Merge temporary fonts to create "pixelart"
+  font_20 = merge_fonts(f4, f5 = merge_fonts(f2, f3));
+
 
   destroy_font(f1);
   destroy_font(f2);
@@ -534,19 +587,6 @@ int main(){
   if(SCREEN_W<1025)GUI_SCALE=7;
   if(SCREEN_W<801)GUI_SCALE=8;
   if(SCREEN_W<641)GUI_SCALE=9;
-  if(SCREEN_W<321)GUI_SCALE=10;
-
-
-
-
-
-
-
-
-
-
-
-
 
   buffer=create_bitmap(1280,1024);
   set_window_title("3 5 7");
