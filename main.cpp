@@ -19,9 +19,12 @@
 
 //Handles the state of the game, menu, game, exiting
 int GAME_STATE;
+//Sets the Gui scale of the game
+int GUI_SCALE;
 
 //Game ending
 int game_ending = playing;
+
 
 //Declare bitmaps
 BITMAP* title_screen;
@@ -30,6 +33,7 @@ BITMAP* cursor;
 BITMAP* game_background;
 BITMAP* stone_1;
 BITMAP* stone_2;
+BITMAP* settings;
 
 BITMAP* buffer;
 
@@ -82,6 +86,19 @@ void end_ai_turn(){
 
 //Update loop, is ran every frame
 void update(){
+        //Debug code, keep scrolling
+        if(key[KEY_1])GUI_SCALE=1;
+        if(key[KEY_2])GUI_SCALE=2;
+        if(key[KEY_3])GUI_SCALE=3;
+        if(key[KEY_4])GUI_SCALE=4;
+        if(key[KEY_5])GUI_SCALE=5;
+        if(key[KEY_6])GUI_SCALE=6;
+        if(key[KEY_7])GUI_SCALE=7;
+        if(key[KEY_8])GUI_SCALE=8;
+        if(key[KEY_9])GUI_SCALE=9;
+        if(key[KEY_0])GUI_SCALE=10;
+
+
         //Main menu loop
         if(GAME_STATE==MENU){
 
@@ -90,6 +107,7 @@ void update(){
             textprintf_ex(buffer,font_48,40,20,makecol(0,0,0),-1,"3 5 7");
             textprintf_ex(buffer,font_24,40,90,makecol(0,0,0),-1,"A game of logic and intellect.");
             draw_sprite(buffer,play_button,(SCREEN_W/2)-150,SCREEN_H/2);
+            stretch_sprite(buffer,settings,SCREEN_W-(800/GUI_SCALE),SCREEN_H-(800/GUI_SCALE),800/GUI_SCALE,800/GUI_SCALE);
 
             //Play button clicking
             if(mouse_b & 1 && collision(mouse_x,mouse_x,(SCREEN_W/2)-150,(SCREEN_W/2)+150, mouse_y,mouse_y,SCREEN_H/2,(SCREEN_H/2)+100)){
@@ -456,6 +474,10 @@ void setup(){
   if(!(stone_2 = load_bitmap("images/stone_2.bmp",NULL))){
     abort_on_error( "Cannot find images/stone_2.png.\n Please check your files and try again.");
   }
+  if(!(settings = load_bitmap("images/settings.png",NULL))){
+    abort_on_error( "Cannot find images/settings.png.\n Please check your files and try again.");
+  }
+
 
   //Load .pcx and convert them into a font
   FONT *f1, *f2, *f3, *f4, *f5;
@@ -501,8 +523,30 @@ int main(){
   install_keyboard();
   install_mouse();
   set_color_depth(32);
-  set_gfx_mode(GFX_AUTODETECT, 1280, 1024, 0, 0);
+  set_gfx_mode(GFX_AUTODETECT, 320, 240, 0, 0);
   install_sound(DIGI_AUTODETECT,MIDI_AUTODETECT,".");
+  if(SCREEN_W<3840)GUI_SCALE=1;
+  if(SCREEN_W<1921)GUI_SCALE=2;
+  if(SCREEN_W<1601)GUI_SCALE=3;
+  if(SCREEN_W<1441)GUI_SCALE=4;
+  if(SCREEN_W<1367)GUI_SCALE=5;
+  if(SCREEN_W<1281)GUI_SCALE=6;
+  if(SCREEN_W<1025)GUI_SCALE=7;
+  if(SCREEN_W<801)GUI_SCALE=8;
+  if(SCREEN_W<641)GUI_SCALE=9;
+  if(SCREEN_W<321)GUI_SCALE=10;
+
+
+
+
+
+
+
+
+
+
+
+
 
   buffer=create_bitmap(1280,1024);
   set_window_title("3 5 7");
