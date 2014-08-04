@@ -114,11 +114,13 @@ void update(){
             if(GUI_SCALE==8)textprintf_ex(buffer,font_20,90/GUI_SCALE,180/GUI_SCALE,makecol(0,0,0),-1,"A game of logic and intellect.");
             if(GUI_SCALE==7)textprintf_ex(buffer,font_24,90/GUI_SCALE,180/GUI_SCALE,makecol(0,0,0),-1,"A game of logic and intellect.");
             if(GUI_SCALE==6)textprintf_ex(buffer,font_34,90/GUI_SCALE,180/GUI_SCALE,makecol(0,0,0),-1,"A game of logic and intellect.");
-
+            if(GUI_SCALE==5)textprintf_ex(buffer,font_48,90/GUI_SCALE,180/GUI_SCALE,makecol(0,0,0),-1,"A game of logic and intellect.");
 
 
             draw_sprite(buffer,play_button,(SCREEN_W/2)-150,SCREEN_H/2);
             stretch_sprite(buffer,settings,SCREEN_W-(800/GUI_SCALE),SCREEN_H-(800/GUI_SCALE),800/GUI_SCALE,800/GUI_SCALE);
+            textprintf_ex(buffer,font_48,(SCREEN_W/2)-125,(SCREEN_H/2)+10,makecol(0,0,0),-1,"PLAY");
+
 
             //Play button clicking
             if(mouse_b & 1 && collision(mouse_x,mouse_x,(SCREEN_W/2)-150,(SCREEN_W/2)+150, mouse_y,mouse_y,SCREEN_H/2,(SCREEN_H/2)+100)){
@@ -542,7 +544,7 @@ void setup(){
 
   //Merge temporary fonts to create "pixelart"
   font_34 = merge_fonts(f4, f5 = merge_fonts(f2, f3));
-    font_14 = merge_fonts(f4, f5 = merge_fonts(f2, f3));
+
 
 
   if(!(f1 = load_font("fonts/font_20.pcx", NULL, NULL))){
