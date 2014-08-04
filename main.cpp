@@ -124,9 +124,11 @@ void update(){
             stretch_sprite(buffer,settings,SCREEN_W-(800/GUI_SCALE),SCREEN_H-(800/GUI_SCALE),800/GUI_SCALE,800/GUI_SCALE);
             textprintf_ex(buffer,font_48,(SCREEN_W/2)-125,(SCREEN_H/2)+10,makecol(0,0,0),-1,"PLAY");
 
+          if(mouse_b & 1 && collision(mouse_x,mouse_x,SCREEN_W-(800/GUI_SCALE),SCREEN_W, mouse_y,mouse_y,SCREEN_H-(800/GUI_SCALE),SCREEN_H))
+             rest(100);
 
             //Play button clicking
-            if(mouse_b & 1 && collision(mouse_x,mouse_x,(SCREEN_W/2)-150,(SCREEN_W/2)+150, mouse_y,mouse_y,SCREEN_H/2,(SCREEN_H/2)+100)){
+          if(mouse_b & 1 && collision(mouse_x,mouse_x,(SCREEN_W/2)-150,(SCREEN_W/2)+150, mouse_y,mouse_y,SCREEN_H/2,(SCREEN_H/2)+100)){
                 GAME_STATE=GAME;
                 turn_init=0;
                 turn=player;
