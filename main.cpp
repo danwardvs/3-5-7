@@ -24,7 +24,7 @@ int GUI_SCALE;
 
 //Game ending
 int game_ending = playing;
-
+int ai_turn_delay = 0;
 
 //Declare bitmaps
 BITMAP* title_screen;
@@ -34,6 +34,8 @@ BITMAP* game_background;
 BITMAP* stone_1;
 BITMAP* stone_2;
 BITMAP* settings;
+BITMAP* player_turn;
+BITMAP* ai_turn;
 
 BITMAP* buffer;
 
@@ -85,6 +87,7 @@ void end_ai_turn(){
       }else{
         turn=player;
         turn_init=0;
+        ai_turn_delay=0;
       }
 }
 
@@ -204,8 +207,11 @@ void update(){
                 //Player turn loop, handles the rock clicking
                 if(turn==player){
 
-                    //Debug mode text
-                    textprintf_ex(buffer,font_48,400,20,makecol(0,0,0),-1,"%i,%i,%i",three_pile_turn,five_pile_turn,seven_pile_turn);
+                    if(game_ending==playing)stretch_sprite(buffer,player_turn,SCREEN_W-(600/GUI_SCALE)-20,20,600/GUI_SCALE,600/GUI_SCALE);
+
+
+                    //Debug mode text, keep scrolling
+                    //textprintf_ex(buffer,font_48,400,20,makecol(0,0,0),-1,"%i,%i,%i",three_pile_turn,five_pile_turn,seven_pile_turn);
 
                      //Initializes the player's turn,
                      if(turn_init==0){
@@ -265,6 +271,12 @@ void update(){
                 }
                 //AI turn loop
                 if(turn==ai){
+
+                if(game_ending==playing)stretch_sprite(buffer,ai_turn,SCREEN_W-(600/GUI_SCALE)-20,20,600/GUI_SCALE,600/GUI_SCALE);
+
+                ai_turn_delay++;
+                //Sets the delay of the AI making its move
+                if(ai_turn_delay==500){
                   if(three_pile==3){
                     if(five_pile==5){
                         if(seven_pile==7)if(turn==ai){three_pile=2; end_ai_turn();}
@@ -437,11 +449,14 @@ void update(){
 
 
                 }
-
+              }
 
 
             }
         }
+
+        //Sets the speed of the entire game, DO NOT TOUCH, YOU CAN DIE!
+        rest(1);
 
         //Draw cursor and draw buffer to the screen
         draw_sprite(buffer,cursor,mouse_x,mouse_y);
@@ -490,7 +505,12 @@ void setup(){
   if(!(settings = load_bitmap("images/settings.png",NULL))){
     abort_on_error( "Cannot find images/settings.png.\n Please check your files and try again.");
   }
-
+  if(!(player_turn = load_bitmap("images/player_turn.png",NULL))){
+    abort_on_error( "Cannot find images/player_turn.png.\n Please check your files and try again.");
+  }
+  if(!(ai_turn = load_bitmap("images/ai_turn.png",NULL))){
+    abort_on_error( "Cannot find images/ai_turn.png.\n Please check your files and try again.");
+  }
 
   //Load .pcx and convert them into a font
   FONT *f1, *f2, *f3, *f4, *f5;
