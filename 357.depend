@@ -1,5 +1,6 @@
 # depslib dependency file v1.0
-1407205656 source:c:\users\danward\desktop\357\3-5-7\main.cpp
+1407252795 source:c:\users\danward\desktop\357\3-5-7\main.cpp
 	<allegro.h>
 	<alpng.h>
+	<time.h>
 

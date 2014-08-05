@@ -1,10 +1,12 @@
 #include<allegro.h>
 #include<alpng.h>
+#include<time.h>
 
 #define EXIT 0
 #define MENU 1
 #define GAME 2
 #define SETUP 3
+#define OPTIONS 4
 
 #define player 1
 #define ai 2
@@ -49,6 +51,7 @@ BITMAP* knob;
 BITMAP* box;
 BITMAP* box_selected;
 BITMAP* start_button;
+BITMAP* slider_gui_scale;
 
 BITMAP* buffer;
 
@@ -93,6 +96,15 @@ bool collision(int xMin1, int xMax1, int xMin2, int xMax2, int yMin1, int yMax1,
   return false;
 }
 
+//Random number function
+int random(int newLowest, int newHighest)
+{
+  int lowest = newLowest, highest = newHighest;
+  int range = (highest - lowest) + 1;
+  int randomNumber = lowest+int(range*rand()/(RAND_MAX + 1.0));
+  return randomNumber;
+}
+
 //Function called when the AI makes a move
 void end_ai_turn(){
      if(three_pile+five_pile+seven_pile==0){
@@ -118,6 +130,27 @@ void update(){
         if(key[KEY_9])GUI_SCALE=9;
         if(key[KEY_0])GUI_SCALE=10;
 
+        //Options game loop
+        if(GAME_STATE==OPTIONS){
+            stretch_sprite(buffer,title_screen,0,0,SCREEN_W,SCREEN_H);
+
+            if(GUI_SCALE==9)textprintf_ex(buffer,font_14,20,20,makecol(0,0,0),-1,"Options");
+            if(GUI_SCALE==8)textprintf_ex(buffer,font_20,20,20,makecol(0,0,0),-1,"Options");
+            if(GUI_SCALE==7)textprintf_ex(buffer,font_24,20,20,makecol(0,0,0),-1,"Options");
+            if(GUI_SCALE==6)textprintf_ex(buffer,font_34,20,20,makecol(0,0,0),-1,"Options");
+            if(GUI_SCALE==5)textprintf_ex(buffer,font_48,20,20,makecol(0,0,0),-1,"Options");
+
+            draw_sprite(buffer,slider,25,SCREEN_H-50);
+            draw_sprite(buffer,knob,ai_turn_delay-25,SCREEN_H-65);
+
+            if(mouse_b & 1 && collision(mouse_x,mouse_x,ai_turn_delay-50,ai_turn_delay+50, mouse_y,mouse_y,SCREEN_H-100,SCREEN_H)){
+                if(mouse_x>49 && mouse_x<500)ai_turn_delay=mouse_x;
+                if(mouse_x<50)ai_turn_delay=50;
+                if(mouse_x>499)ai_turn_delay=500;
+            }
+
+
+        }
 
         //Game setup loop
         if(GAME_STATE==SETUP){
@@ -130,7 +163,10 @@ void update(){
                 GAME_STATE=GAME;
                 if(turn_start==player_start){turn=player; turn_init=0;}
                 if(turn_start==ai_start)turn=ai;
-                if(turn_start==random_start)turn=ai;
+                if(turn_start==random_start){
+                    if(random(1,2)==1)turn=player;
+                    else turn=ai;
+                }
 
 
             }
@@ -226,9 +262,10 @@ void update(){
             textprintf_ex(buffer,font_48,(SCREEN_W/2)-125,(SCREEN_H/2)+10,makecol(0,0,0),-1,"PLAY");
 
           if(mouse_b & 1 && collision(mouse_x,mouse_x,SCREEN_W-(800/GUI_SCALE),SCREEN_W, mouse_y,mouse_y,SCREEN_H-(800/GUI_SCALE),SCREEN_H))
-             rest(100);
+             GAME_STATE=OPTIONS;
 
-            //Play button clicking
+            //Play button clickingdraw_sprite(buffer,slider,25,SCREEN_H-50);
+            draw_sprite(buffer,knob,ai_turn_delay-25,SCREEN_H-65);
           if(mouse_b & 1 && collision(mouse_x,mouse_x,(SCREEN_W/2)-150,(SCREEN_W/2)+150, mouse_y,mouse_y,SCREEN_H/2,(SCREEN_H/2)+100)){
                 GAME_STATE=SETUP;
            }
@@ -251,10 +288,12 @@ void update(){
                     game_ending=playing;
                     if(turn_start==player_start){turn=player; turn_init=0;}
                     if(turn_start==ai_start)turn=ai;
-                    if(turn_start==random_start)turn=ai;
-
-
+                    if(turn_start==random_start){
+                        if(random(1,2)==1)turn=player;
+                        else turn=ai;
+                    }
                 }
+                while(key[KEY_ENTER]){}
 
                 //Draw background for game
                 draw_sprite(buffer,game_background,0,0);
@@ -263,7 +302,8 @@ void update(){
                 if(game_ending==ai_win)textprintf_ex(buffer,font_48,400,20,makecol(0,0,0),-1,"AI wins!");
 
 
-
+draw_sprite(buffer,slider,25,SCREEN_H-50);
+            draw_sprite(buffer,knob,ai_turn_delay-25,SCREEN_H-65);
                 //Draw two semi transparent layers
 
                 //This layer doesn't change until the turn ends
@@ -655,6 +695,10 @@ void setup(){
   if(!(start_button = load_bitmap("images/start_button.png",NULL))){
     abort_on_error( "Cannot find images/start_button.png.\n Please check your files and try again.");
   }
+  if(!(slider_gui_scale = load_bitmap("images/slider_gui_scale.png",NULL))){
+    abort_on_error( "Cannot find images/slider_gui_scale.png.\n Please check your files and try again.");
+  }
+
 
 
   //Load .pcx and convert them into a font
@@ -736,7 +780,7 @@ void setup(){
 
 int main(){
 
-
+  srand(time(NULL));
   allegro_init();
   alpng_init();
   install_timer();
