@@ -36,6 +36,8 @@ int ai_turn_delay_incrementer = 0;
 int ai_turn_delay = 225;
 int turn_start = player_start;
 
+bool autoset_gui_scale = true;
+
 //Declare bitmaps
 BITMAP* title_screen;
 BITMAP* play_button;
@@ -78,6 +80,8 @@ int three_pile=3;
 int five_pile=5;
 int seven_pile=7;
 
+int click_incrementer;
+
 //A function that handles error messages
 void abort_on_error(const char *message){
 	 if (screen != NULL){
@@ -118,6 +122,7 @@ void end_ai_turn(){
 
 //Update loop, is ran every frame
 void update(){
+
         //Debug code, keep scrolling
         if(key[KEY_1])GUI_SCALE=1;
         if(key[KEY_2])GUI_SCALE=2;
@@ -140,13 +145,27 @@ void update(){
             if(GUI_SCALE==6)textprintf_ex(buffer,font_34,20,20,makecol(0,0,0),-1,"Options");
             if(GUI_SCALE==5)textprintf_ex(buffer,font_48,20,20,makecol(0,0,0),-1,"Options");
 
-            draw_sprite(buffer,slider,25,SCREEN_H-50);
-            draw_sprite(buffer,knob,ai_turn_delay-25,SCREEN_H-65);
 
-            if(mouse_b & 1 && collision(mouse_x,mouse_x,ai_turn_delay-50,ai_turn_delay+50, mouse_y,mouse_y,SCREEN_H-100,SCREEN_H)){
-                if(mouse_x>49 && mouse_x<500)ai_turn_delay=mouse_x;
-                if(mouse_x<50)ai_turn_delay=50;
-                if(mouse_x>499)ai_turn_delay=500;
+            if(autoset_gui_scale)stretch_sprite(buffer,box_selected,30,(SCREEN_H-(350/GUI_SCALE))-(1200/GUI_SCALE),300/GUI_SCALE,300/GUI_SCALE);
+            if(!autoset_gui_scale)stretch_sprite(buffer,box,30,(SCREEN_H-(350/GUI_SCALE))-(1200/GUI_SCALE),300/GUI_SCALE,300/GUI_SCALE);
+
+            if(autoset_gui_scale && click_incrementer>10 && mouse_b & 1 && collision(mouse_x,mouse_x,30,30+(300/GUI_SCALE), mouse_y,mouse_y,(SCREEN_H-(350/GUI_SCALE))-(1200/GUI_SCALE),(SCREEN_H-(350/GUI_SCALE))+((300/GUI_SCALE)-(1200/GUI_SCALE)))){
+                    autoset_gui_scale=false;
+                    click_incrementer=0;
+            }
+            if(!autoset_gui_scale && click_incrementer>10 && mouse_b & 1 && collision(mouse_x,mouse_x,30,30+(300/GUI_SCALE), mouse_y,mouse_y,(SCREEN_H-(700/GUI_SCALE))-(1200/GUI_SCALE),(SCREEN_H-(700/GUI_SCALE))+((300/GUI_SCALE)-(1200/GUI_SCALE)))){
+                    autoset_gui_scale=true;
+                    click_incrementer=0;
+            }
+
+            textprintf_ex(buffer,font_14,20,SCREEN_H-150,makecol(0,0,0),-1,"GUI Scale:%i",GUI_SCALE);
+            draw_sprite(buffer,slider_gui_scale,25,SCREEN_H-50);
+            draw_sprite(buffer,knob,(GUI_SCALE*50)-25,SCREEN_H-65);
+
+            if(mouse_b & 1 && collision(mouse_x,mouse_x,(GUI_SCALE*50)-100,(GUI_SCALE*50)+100, mouse_y,mouse_y,SCREEN_H-100,SCREEN_H)){
+                if(mouse_x>49 && mouse_x<500)GUI_SCALE=mouse_x/50;
+                if(mouse_x<50)GUI_SCALE=1;
+                if(mouse_x>499)GUI_SCALE=9;
             }
 
 
@@ -159,6 +178,7 @@ void update(){
             draw_sprite(buffer,knob,ai_turn_delay-25,SCREEN_H-65);
 
             stretch_sprite(buffer,start_button,(SCREEN_W-(1440/GUI_SCALE))-10,10,(1440/GUI_SCALE)-10,(428/GUI_SCALE)+10);
+
             if(mouse_b & 1 && collision(mouse_x,mouse_x,(SCREEN_W-(1440/GUI_SCALE))-10,(((SCREEN_W-(1440/GUI_SCALE))-10)+((1440/GUI_SCALE)-10)), mouse_y,mouse_y,10,(428/GUI_SCALE)+10)){
                 GAME_STATE=GAME;
                 if(turn_start==player_start){turn=player; turn_init=0;}
@@ -264,8 +284,8 @@ void update(){
           if(mouse_b & 1 && collision(mouse_x,mouse_x,SCREEN_W-(800/GUI_SCALE),SCREEN_W, mouse_y,mouse_y,SCREEN_H-(800/GUI_SCALE),SCREEN_H))
              GAME_STATE=OPTIONS;
 
-            //Play button clickingdraw_sprite(buffer,slider,25,SCREEN_H-50);
-            draw_sprite(buffer,knob,ai_turn_delay-25,SCREEN_H-65);
+            //Play button clicking
+
           if(mouse_b & 1 && collision(mouse_x,mouse_x,(SCREEN_W/2)-150,(SCREEN_W/2)+150, mouse_y,mouse_y,SCREEN_H/2,(SCREEN_H/2)+100)){
                 GAME_STATE=SETUP;
            }
@@ -302,8 +322,7 @@ void update(){
                 if(game_ending==ai_win)textprintf_ex(buffer,font_48,400,20,makecol(0,0,0),-1,"AI wins!");
 
 
-draw_sprite(buffer,slider,25,SCREEN_H-50);
-            draw_sprite(buffer,knob,ai_turn_delay-25,SCREEN_H-65);
+
                 //Draw two semi transparent layers
 
                 //This layer doesn't change until the turn ends
@@ -624,7 +643,7 @@ draw_sprite(buffer,slider,25,SCREEN_H-50);
 
       }
 
-
+        click_incrementer++;
         //Draw cursor and draw buffer to the screen
         draw_sprite(buffer,cursor,mouse_x,mouse_y);
         draw_sprite(screen,buffer,0,0);
