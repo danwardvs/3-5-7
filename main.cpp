@@ -26,7 +26,7 @@ int GUI_SCALE;
 //Game ending
 int game_ending = playing;
 int ai_turn_delay_incrementer = 0;
-int ai_turn_delay = 0;
+int ai_turn_delay = 225;
 
 //Declare bitmaps
 BITMAP* title_screen;
@@ -113,16 +113,24 @@ void update(){
         //Game setup loop
         if(GAME_STATE==SETUP){
             stretch_sprite(buffer,title_screen,0,0,SCREEN_W,SCREEN_H);
-            if(GUI_SCALE==9)stretch_sprite(buffer,slider,25,SCREEN_H-50,250,13);
-            if(GUI_SCALE==8)stretch_sprite(buffer,slider,25,SCREEN_H-50,350,18);
-            if(GUI_SCALE==7)stretch_sprite(buffer,slider,25,SCREEN_H-50,450,23);
-            if(GUI_SCALE<7)draw_sprite(buffer,slider,25,SCREEN_H-50);
-            if(GUI_SCALE<7)draw_sprite(buffer,knob,ai_turn_delay-25,SCREEN_H-60);
+            draw_sprite(buffer,slider,25,SCREEN_H-50);
+            draw_sprite(buffer,knob,ai_turn_delay-25,SCREEN_H-65);
 
-            if(GUI_SCALE<7)
-                if(mouse_b & 1 && collision(mouse_x,mouse_x,ai_turn_delay-50,ai_turn_delay+50, mouse_y,mouse_y,SCREEN_H-60,SCREEN_H-10)){
-                    ai_turn_delay=mouse_x;
-                }
+
+
+
+
+            if(mouse_b & 1 && collision(mouse_x,mouse_x,ai_turn_delay-50,ai_turn_delay+50, mouse_y,mouse_y,SCREEN_H-100,SCREEN_H)){
+                if(mouse_x>49 && mouse_x<500)ai_turn_delay=mouse_x;
+                if(mouse_x<50)ai_turn_delay=50;
+                if(mouse_x>499)ai_turn_delay=500;
+            }
+            int ai_turn_delay_real_value=ai_turn_delay-50;
+            if(GUI_SCALE==9)textprintf_ex(buffer,font_14,20,SCREEN_H-(800/GUI_SCALE),makecol(0,0,0),-1,"AI Thinking Time:%i",ai_turn_delay_real_value);
+            if(GUI_SCALE==8)textprintf_ex(buffer,font_20,20,SCREEN_H-(800/GUI_SCALE),makecol(0,0,0),-1,"AI Thinking Time:%i",ai_turn_delay_real_value);
+            if(GUI_SCALE==7)textprintf_ex(buffer,font_24,20,SCREEN_H-(800/GUI_SCALE),makecol(0,0,0),-1,"AI Thinking Time:%i",ai_turn_delay_real_value);
+            if(GUI_SCALE==6)textprintf_ex(buffer,font_34,20,SCREEN_H-(800/GUI_SCALE),makecol(0,0,0),-1,"AI Thinking Time:%i",ai_turn_delay_real_value);
+            if(GUI_SCALE==5)textprintf_ex(buffer,font_48,20,SCREEN_H-(800/GUI_SCALE),makecol(0,0,0),-1,"AI Thinking Time:%i",ai_turn_delay_real_value);
 
             if(GUI_SCALE==9)textprintf_ex(buffer,font_14,90/GUI_SCALE,180/GUI_SCALE,makecol(0,0,0),-1,"Left click: Remove stone.");
             if(GUI_SCALE==8)textprintf_ex(buffer,font_20,90/GUI_SCALE,180/GUI_SCALE,makecol(0,0,0),-1,"Left click: Remove stone.");
@@ -324,7 +332,7 @@ void update(){
 
                 ai_turn_delay_incrementer++;
                 //Sets the delay of the AI making its move
-                if(ai_turn_delay_incrementer==ai_turn_delay){
+                if(ai_turn_delay_incrementer==ai_turn_delay-50){
                   if(three_pile==3){
                     if(five_pile==5){
                         if(seven_pile==7)if(turn==ai){three_pile=2; end_ai_turn();}
