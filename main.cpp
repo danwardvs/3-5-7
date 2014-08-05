@@ -9,6 +9,11 @@
 #define player 1
 #define ai 2
 
+#define player_start 1
+#define ai_start 2
+#define random_start 3
+
+
 #define playing 1
 #define ai_win  2
 #define player_win 3
@@ -27,6 +32,7 @@ int GUI_SCALE;
 int game_ending = playing;
 int ai_turn_delay_incrementer = 0;
 int ai_turn_delay = 225;
+int turn_start = player_start;
 
 //Declare bitmaps
 BITMAP* title_screen;
@@ -40,6 +46,8 @@ BITMAP* player_turn;
 BITMAP* ai_turn;
 BITMAP* slider;
 BITMAP* knob;
+BITMAP* box;
+BITMAP* box_selected;
 
 BITMAP* buffer;
 
@@ -116,6 +124,21 @@ void update(){
             draw_sprite(buffer,slider,25,SCREEN_H-50);
             draw_sprite(buffer,knob,ai_turn_delay-25,SCREEN_H-65);
 
+            if(turn_start==player_start)stretch_sprite(buffer,box_selected,30,(SCREEN_H-(350/GUI_SCALE))-200,300/GUI_SCALE,300/GUI_SCALE);
+            if(turn_start!=player_start)stretch_sprite(buffer,box,30,(SCREEN_H-(350/GUI_SCALE))-200,300/GUI_SCALE,300/GUI_SCALE);
+            if(turn_start==ai_start)stretch_sprite(buffer,box_selected,30,(SCREEN_H-(700/GUI_SCALE))-200,300/GUI_SCALE,300/GUI_SCALE);
+            if(turn_start!=ai_start)stretch_sprite(buffer,box,30,(SCREEN_H-(700/GUI_SCALE))-200,300/GUI_SCALE,300/GUI_SCALE);
+            if(turn_start==random_start)stretch_sprite(buffer,box_selected,30,(SCREEN_H-(1050/GUI_SCALE))-200,300/GUI_SCALE,300/GUI_SCALE);
+            if(turn_start!=random_start)stretch_sprite(buffer,box,30,(SCREEN_H-(1050/GUI_SCALE))-200,300/GUI_SCALE,300/GUI_SCALE);
+            if(mouse_b & 1 && collision(mouse_x,mouse_x,30,30+(300/GUI_SCALE), mouse_y,mouse_y,(SCREEN_H-(350/GUI_SCALE))-200,(SCREEN_H-(350/GUI_SCALE))+((300/GUI_SCALE)-200)))turn_start=player_start;
+            if(mouse_b & 1 && collision(mouse_x,mouse_x,30,30+(300/GUI_SCALE), mouse_y,mouse_y,(SCREEN_H-(700/GUI_SCALE))-200,(SCREEN_H-(700/GUI_SCALE))+((300/GUI_SCALE)-200)))turn_start=ai_start;
+            if(mouse_b & 1 && collision(mouse_x,mouse_x,30,30+(300/GUI_SCALE), mouse_y,mouse_y,(SCREEN_H-(1050/GUI_SCALE))-200,(SCREEN_H-(1050/GUI_SCALE))+((300/GUI_SCALE)-200)))turn_start=random_start;
+
+            if(GUI_SCALE==9)textprintf_ex(buffer,font_14,30+(300/GUI_SCALE),(SCREEN_H-(350/GUI_SCALE))-200,makecol(0,0,0),-1,"Player Start");
+            if(GUI_SCALE==8)textprintf_ex(buffer,font_20,30+(300/GUI_SCALE),(SCREEN_H-(350/GUI_SCALE))-200,makecol(0,0,0),-1,"Player Start");
+            if(GUI_SCALE==7)textprintf_ex(buffer,font_24,30+(300/GUI_SCALE),(SCREEN_H-(350/GUI_SCALE))-200,makecol(0,0,0),-1,"Player Start");
+            if(GUI_SCALE==6)textprintf_ex(buffer,font_34,30+(300/GUI_SCALE),(SCREEN_H-(350/GUI_SCALE))-200,makecol(0,0,0),-1,"Player Start");
+            if(GUI_SCALE==5)textprintf_ex(buffer,font_48,30+(300/GUI_SCALE),(SCREEN_H-(350/GUI_SCALE))-200,makecol(0,0,0),-1,"Player Start");
 
 
 
@@ -591,6 +614,14 @@ void setup(){
   if(!(knob = load_bitmap("images/knob.png",NULL))){
     abort_on_error( "Cannot find images/knob.png.\n Please check your files and try again.");
   }
+  if(!(box = load_bitmap("images/box.png",NULL))){
+    abort_on_error( "Cannot find images/box.png.\n Please check your files and try again.");
+  }
+  if(!(box_selected = load_bitmap("images/box_selected.png",NULL))){
+    abort_on_error( "Cannot find images/box_selected.png.\n Please check your files and try again.");
+  }
+
+
 
   //Load .pcx and convert them into a font
   FONT *f1, *f2, *f3, *f4, *f5;
