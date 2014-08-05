@@ -48,6 +48,7 @@ BITMAP* slider;
 BITMAP* knob;
 BITMAP* box;
 BITMAP* box_selected;
+BITMAP* start_button;
 
 BITMAP* buffer;
 
@@ -123,6 +124,16 @@ void update(){
             stretch_sprite(buffer,title_screen,0,0,SCREEN_W,SCREEN_H);
             draw_sprite(buffer,slider,25,SCREEN_H-50);
             draw_sprite(buffer,knob,ai_turn_delay-25,SCREEN_H-65);
+
+            stretch_sprite(buffer,start_button,(SCREEN_W-(1440/GUI_SCALE))-10,10,(1440/GUI_SCALE)-10,(428/GUI_SCALE)+10);
+            if(mouse_b & 1 && collision(mouse_x,mouse_x,(SCREEN_W-(1440/GUI_SCALE))-10,(((SCREEN_W-(1440/GUI_SCALE))-10)+((1440/GUI_SCALE)-10)), mouse_y,mouse_y,10,(428/GUI_SCALE)+10)){
+                GAME_STATE=GAME;
+                if(turn_start==player_start){turn=player; turn_init=0;}
+                if(turn_start==ai_start)turn=ai;
+                if(turn_start==random_start)turn=ai;
+
+
+            }
 
             if(turn_start==player_start)stretch_sprite(buffer,box_selected,30,(SCREEN_H-(350/GUI_SCALE))-(1200/GUI_SCALE),300/GUI_SCALE,300/GUI_SCALE);
             if(turn_start!=player_start)stretch_sprite(buffer,box,30,(SCREEN_H-(350/GUI_SCALE))-(1200/GUI_SCALE),300/GUI_SCALE,300/GUI_SCALE);
@@ -238,8 +249,10 @@ void update(){
                     five_pile_turn=5;
                     seven_pile_turn=7;
                     game_ending=playing;
-                    turn=player;
-                    turn_init=0;
+                    if(turn_start==player_start){turn=player; turn_init=0;}
+                    if(turn_start==ai_start)turn=ai;
+                    if(turn_start==random_start)turn=ai;
+
 
                 }
 
@@ -366,7 +379,7 @@ void update(){
 
                 ai_turn_delay_incrementer++;
                 //Sets the delay of the AI making its move
-                if(ai_turn_delay_incrementer==ai_turn_delay-50){
+                if(ai_turn_delay_incrementer>=ai_turn_delay-50){
                   if(three_pile==3){
                     if(five_pile==5){
                         if(seven_pile==7)if(turn==ai){three_pile=2; end_ai_turn();}
@@ -558,7 +571,15 @@ void update(){
         if(key[KEY_ESC]){
            int alert_value;
            alert_value=alert3(NULL, "Paused",NULL,"&Main Menu", "&Resume","&Exit", 'm','r','e' );
-           if(alert_value==1)GAME_STATE=MENU;
+           if(alert_value==1){GAME_STATE=MENU;
+                    three_pile=3;
+                    five_pile=5;
+                    seven_pile=7;
+                    three_pile_turn=3;
+                    five_pile_turn=5;
+                    seven_pile_turn=7;
+                    game_ending=playing;
+           }
            if(alert_value==3)GAME_STATE=EXIT;
 
       }
@@ -631,7 +652,9 @@ void setup(){
   if(!(box_selected = load_bitmap("images/box_selected.png",NULL))){
     abort_on_error( "Cannot find images/box_selected.png.\n Please check your files and try again.");
   }
-
+  if(!(start_button = load_bitmap("images/start_button.png",NULL))){
+    abort_on_error( "Cannot find images/start_button.png.\n Please check your files and try again.");
+  }
 
 
   //Load .pcx and convert them into a font
