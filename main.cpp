@@ -4,6 +4,7 @@
 #define EXIT 0
 #define MENU 1
 #define GAME 2
+#define SETUP 3
 
 #define player 1
 #define ai 2
@@ -24,6 +25,7 @@ int GUI_SCALE;
 
 //Game ending
 int game_ending = playing;
+int ai_turn_delay_incrementer = 0;
 int ai_turn_delay = 0;
 
 //Declare bitmaps
@@ -36,6 +38,8 @@ BITMAP* stone_2;
 BITMAP* settings;
 BITMAP* player_turn;
 BITMAP* ai_turn;
+BITMAP* slider;
+BITMAP* knob;
 
 BITMAP* buffer;
 
@@ -87,7 +91,7 @@ void end_ai_turn(){
       }else{
         turn=player;
         turn_init=0;
-        ai_turn_delay=0;
+        ai_turn_delay_incrementer=0;
       }
 }
 
@@ -106,6 +110,50 @@ void update(){
         if(key[KEY_0])GUI_SCALE=10;
 
 
+        //Game setup loop
+        if(GAME_STATE==SETUP){
+            stretch_sprite(buffer,title_screen,0,0,SCREEN_W,SCREEN_H);
+            if(GUI_SCALE==9)stretch_sprite(buffer,slider,25,SCREEN_H-50,250,13);
+            if(GUI_SCALE==8)stretch_sprite(buffer,slider,25,SCREEN_H-50,350,18);
+            if(GUI_SCALE==7)stretch_sprite(buffer,slider,25,SCREEN_H-50,450,23);
+            if(GUI_SCALE<7)draw_sprite(buffer,slider,25,SCREEN_H-50);
+            if(GUI_SCALE<7)draw_sprite(buffer,knob,ai_turn_delay-25,SCREEN_H-60);
+
+            if(GUI_SCALE<7)
+                if(mouse_b & 1 && collision(mouse_x,mouse_x,ai_turn_delay-50,ai_turn_delay+50, mouse_y,mouse_y,SCREEN_H-60,SCREEN_H-10)){
+                    ai_turn_delay=mouse_x;
+                }
+
+            if(GUI_SCALE==9)textprintf_ex(buffer,font_14,90/GUI_SCALE,180/GUI_SCALE,makecol(0,0,0),-1,"Left click: Remove stone.");
+            if(GUI_SCALE==8)textprintf_ex(buffer,font_20,90/GUI_SCALE,180/GUI_SCALE,makecol(0,0,0),-1,"Left click: Remove stone.");
+            if(GUI_SCALE==7)textprintf_ex(buffer,font_24,90/GUI_SCALE,180/GUI_SCALE,makecol(0,0,0),-1,"Left click: Remove stone.");
+            if(GUI_SCALE==6)textprintf_ex(buffer,font_34,90/GUI_SCALE,180/GUI_SCALE,makecol(0,0,0),-1,"Left click: Remove stone.");
+            if(GUI_SCALE==5)textprintf_ex(buffer,font_48,90/GUI_SCALE,180/GUI_SCALE,makecol(0,0,0),-1,"Left click: Remove stone.");
+
+            if(GUI_SCALE==9)textprintf_ex(buffer,font_14,90/GUI_SCALE,(180/GUI_SCALE)*3,makecol(0,0,0),-1,"Right click: Reset turn.");
+            if(GUI_SCALE==8)textprintf_ex(buffer,font_20,90/GUI_SCALE,(180/GUI_SCALE)*3,makecol(0,0,0),-1,"Right click: Reset turn.");
+            if(GUI_SCALE==7)textprintf_ex(buffer,font_24,90/GUI_SCALE,(180/GUI_SCALE)*3,makecol(0,0,0),-1,"Right click: Reset turn.");
+            if(GUI_SCALE==6)textprintf_ex(buffer,font_34,90/GUI_SCALE,(180/GUI_SCALE)*3,makecol(0,0,0),-1,"Right click: Reset turn.");
+            if(GUI_SCALE==5)textprintf_ex(buffer,font_48,90/GUI_SCALE,(180/GUI_SCALE)*3,makecol(0,0,0),-1,"Right click: Reset turn.");
+
+            if(GUI_SCALE==9)textprintf_ex(buffer,font_14,90/GUI_SCALE,(180/GUI_SCALE)*5,makecol(0,0,0),-1,"Space: Finish turn.");
+            if(GUI_SCALE==8)textprintf_ex(buffer,font_20,90/GUI_SCALE,(180/GUI_SCALE)*5,makecol(0,0,0),-1,"Space: Finish turn.");
+            if(GUI_SCALE==7)textprintf_ex(buffer,font_24,90/GUI_SCALE,(180/GUI_SCALE)*5,makecol(0,0,0),-1,"Space: Finish turn.");
+            if(GUI_SCALE==6)textprintf_ex(buffer,font_34,90/GUI_SCALE,(180/GUI_SCALE)*5,makecol(0,0,0),-1,"Space: Finish turn.");
+            if(GUI_SCALE==5)textprintf_ex(buffer,font_48,90/GUI_SCALE,(180/GUI_SCALE)*5,makecol(0,0,0),-1,"Space: Finish turn.");
+
+            if(GUI_SCALE==9)textprintf_ex(buffer,font_14,90/GUI_SCALE,(180/GUI_SCALE)*7,makecol(0,0,0),-1,"Enter: Reset Game.");
+            if(GUI_SCALE==8)textprintf_ex(buffer,font_20,90/GUI_SCALE,(180/GUI_SCALE)*7,makecol(0,0,0),-1,"Enter: Reset Game.");
+            if(GUI_SCALE==7)textprintf_ex(buffer,font_24,90/GUI_SCALE,(180/GUI_SCALE)*7,makecol(0,0,0),-1,"Enter: Reset Game.");
+            if(GUI_SCALE==6)textprintf_ex(buffer,font_34,90/GUI_SCALE,(180/GUI_SCALE)*7,makecol(0,0,0),-1,"Enter: Reset Game.");
+            if(GUI_SCALE==5)textprintf_ex(buffer,font_48,90/GUI_SCALE,(180/GUI_SCALE)*7,makecol(0,0,0),-1,"Enter: Reset Game.");
+
+            if(GUI_SCALE==9)textprintf_ex(buffer,font_14,90/GUI_SCALE,(180/GUI_SCALE)*9,makecol(0,0,0),-1,"ESC: Pause/Exit Game.");
+            if(GUI_SCALE==8)textprintf_ex(buffer,font_20,90/GUI_SCALE,(180/GUI_SCALE)*9,makecol(0,0,0),-1,"ESC: Pause/Exit Game.");
+            if(GUI_SCALE==7)textprintf_ex(buffer,font_24,90/GUI_SCALE,(180/GUI_SCALE)*9,makecol(0,0,0),-1,"ESC: Pause/Exit Game.");
+            if(GUI_SCALE==6)textprintf_ex(buffer,font_34,90/GUI_SCALE,(180/GUI_SCALE)*9,makecol(0,0,0),-1,"ESC: Pause/Exit Game.");
+            if(GUI_SCALE==5)textprintf_ex(buffer,font_48,90/GUI_SCALE,(180/GUI_SCALE)*9,makecol(0,0,0),-1,"ESC: Pause/Exit Game.");
+        }
         //Main menu loop
         if(GAME_STATE==MENU){
 
@@ -129,10 +177,8 @@ void update(){
 
             //Play button clicking
           if(mouse_b & 1 && collision(mouse_x,mouse_x,(SCREEN_W/2)-150,(SCREEN_W/2)+150, mouse_y,mouse_y,SCREEN_H/2,(SCREEN_H/2)+100)){
-                GAME_STATE=GAME;
-                turn_init=0;
-                turn=player;
-            }
+                GAME_STATE=SETUP;
+           }
         }
 
         //Game loop, handles the actual game
@@ -276,9 +322,9 @@ void update(){
 
                 if(game_ending==playing)stretch_sprite(buffer,ai_turn,SCREEN_W-(600/GUI_SCALE)-20,20,600/GUI_SCALE,600/GUI_SCALE);
 
-                ai_turn_delay++;
+                ai_turn_delay_incrementer++;
                 //Sets the delay of the AI making its move
-                if(ai_turn_delay==500){
+                if(ai_turn_delay_incrementer==ai_turn_delay){
                   if(three_pile==3){
                     if(five_pile==5){
                         if(seven_pile==7)if(turn==ai){three_pile=2; end_ai_turn();}
@@ -456,14 +502,32 @@ void update(){
 
             }
         }
+        if(key[KEY_F9])set_gfx_mode(GFX_AUTODETECT, 640, 480, 0, 0);
+        if(key[KEY_F8])set_gfx_mode(GFX_AUTODETECT,800 , 600, 0, 0);
+        if(key[KEY_F7])set_gfx_mode(GFX_AUTODETECT, 1024, 768, 0, 0);
+        if(key[KEY_F6])set_gfx_mode(GFX_AUTODETECT,1280 ,1024 , 0, 0);
+        if(key[KEY_F5])set_gfx_mode(GFX_AUTODETECT,1366 ,768 , 0, 0);
+        if(key[KEY_F4])set_gfx_mode(GFX_AUTODETECT,1440 ,900 , 0, 0);
+        if(key[KEY_F])set_gfx_mode(GFX_AUTODETECT,1600 ,900 , 0, 0);
+        if(key[KEY_F])set_gfx_mode(GFX_AUTODETECT,1920 ,1080 , 0, 0);
+        if(key[KEY_F])set_gfx_mode(GFX_AUTODETECT,3840 ,2160 , 0, 0);
 
-        //Sets the speed of the entire game, DO NOT TOUCH, YOU CAN DIE!
-        rest(1);
+        //State independent reset key
+        if(key[KEY_ESC]){
+           int alert_value;
+           alert_value=alert3(NULL, "Paused",NULL,"&Main Menu", "&Resume","&Exit", 'm','r','e' );
+           if(alert_value==1)GAME_STATE=MENU;
+           if(alert_value==3)GAME_STATE=EXIT;
+
+      }
+
 
         //Draw cursor and draw buffer to the screen
         draw_sprite(buffer,cursor,mouse_x,mouse_y);
         draw_sprite(screen,buffer,0,0);
 
+        //Sets the speed of the entire game, DO NOT TOUCH, YOU CAN DIE!
+        rest(1);
 
 }
 
@@ -512,6 +576,12 @@ void setup(){
   }
   if(!(ai_turn = load_bitmap("images/ai_turn.png",NULL))){
     abort_on_error( "Cannot find images/ai_turn.png.\n Please check your files and try again.");
+  }
+  if(!(slider = load_bitmap("images/slider.png",NULL))){
+    abort_on_error( "Cannot find images/slider.png.\n Please check your files and try again.");
+  }
+  if(!(knob = load_bitmap("images/knob.png",NULL))){
+    abort_on_error( "Cannot find images/knob.png.\n Please check your files and try again.");
   }
 
   //Load .pcx and convert them into a font
@@ -616,7 +686,7 @@ int main(){
   set_window_title("3 5 7");
   setup();
 
-  	while(!key[KEY_ESC] && !GAME_STATE==EXIT){
+  	while(!GAME_STATE==EXIT){
         update();
   	}
 
