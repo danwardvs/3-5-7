@@ -30,6 +30,9 @@ int GAME_STATE;
 //Sets the Gui scale of the game
 int GUI_SCALE;
 
+int get_width;
+int get_height;
+
 //Game ending
 int game_ending = playing;
 int ai_turn_delay_incrementer = 0;
@@ -806,7 +809,10 @@ int main(){
   install_keyboard();
   install_mouse();
   set_color_depth(32);
-  set_gfx_mode(GFX_AUTODETECT, 1280, 1024, 0, 0);
+  get_desktop_resolution(&get_width,&get_height);
+	 /* Got the resolution correctly */
+
+  set_gfx_mode(GFX_AUTODETECT, get_width, get_height, 0, 0);
   install_sound(DIGI_AUTODETECT,MIDI_AUTODETECT,".");
   if(SCREEN_W<3840)GUI_SCALE=1;
   if(SCREEN_W<1921)GUI_SCALE=2;
