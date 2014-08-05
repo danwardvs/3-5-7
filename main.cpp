@@ -824,7 +824,7 @@ int main(){
   if(SCREEN_W<801)GUI_SCALE=8;
   if(SCREEN_W<641)GUI_SCALE=9;
 
-  buffer=create_bitmap(1280,1024);
+  buffer=create_bitmap(get_width,get_height);
   set_window_title("3 5 7");
   setup();
 
