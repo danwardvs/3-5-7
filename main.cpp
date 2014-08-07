@@ -2,6 +2,7 @@
 #include<alpng.h>
 #include<time.h>
 
+
 #define EXIT 0
 #define MENU 1
 #define GAME 2
@@ -35,6 +36,9 @@ int get_height;
 
 
 char* game_path;
+char* command_line;
+
+bool commands = false;
 
 //Game ending
 int game_ending = playing;
@@ -168,6 +172,7 @@ void update(){
             if(GUI_SCALE==6)textprintf_ex(buffer,font_34,20,20,makecol(0,0,0),-1,"Options");
             if(GUI_SCALE==5)textprintf_ex(buffer,font_48,20,20,makecol(0,0,0),-1,"Options");
             textprintf_ex(buffer,font_10,3,3,makecol(0,0,0),-1,"Path:%s",game_path);
+            if(commands)textprintf_ex(buffer,font_10,3,15,makecol(0,0,0),-1,"Commands!:%s",command_line);
 
 
             if(autoset_gui_scale)stretch_sprite(buffer,box_selected,30,(SCREEN_H-(350/GUI_SCALE))-(1200/GUI_SCALE),300/GUI_SCALE,300/GUI_SCALE);
@@ -849,7 +854,14 @@ int main( int argc, char* argv[] ){
   buffer=create_bitmap(get_width,get_height);
   set_window_title("3 5 7");
   setup();
+
+
   game_path=argv[0];
+
+  if( argc == 1) commands=false;
+    else{ command_line=argv[1]; commands=true;}
+
+
 
   	while(!GAME_STATE==EXIT){
         update();
