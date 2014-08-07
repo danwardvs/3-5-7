@@ -33,6 +33,9 @@ int GUI_SCALE;
 int get_width;
 int get_height;
 
+
+char* game_path;
+
 //Game ending
 int game_ending = playing;
 int ai_turn_delay_incrementer = 0;
@@ -122,6 +125,23 @@ void end_ai_turn(){
         ai_turn_delay_incrementer=0;
       }
 }
+void change_resolution(int newWidth, int newHeight){
+
+    if(set_gfx_mode(GFX_AUTODETECT, newWidth, newHeight, 0, 0)!=0)
+        abort_on_error("Failed to initialize graphics mode!");
+
+    buffer=create_bitmap(get_width,get_height);
+    if(SCREEN_W<3840)GUI_SCALE=1;
+    if(SCREEN_W<1921)GUI_SCALE=2;
+    if(SCREEN_W<1601)GUI_SCALE=3;
+    if(SCREEN_W<1441)GUI_SCALE=4;
+    if(SCREEN_W<1367)GUI_SCALE=5;
+    if(SCREEN_W<1281)GUI_SCALE=6;
+    if(SCREEN_W<1025)GUI_SCALE=7;
+    if(SCREEN_W<801)GUI_SCALE=8;
+    if(SCREEN_W<641)GUI_SCALE=9;
+
+}
 
 //Update loop, is ran every frame
 void update(){
@@ -147,6 +167,7 @@ void update(){
             if(GUI_SCALE==7)textprintf_ex(buffer,font_24,20,20,makecol(0,0,0),-1,"Options");
             if(GUI_SCALE==6)textprintf_ex(buffer,font_34,20,20,makecol(0,0,0),-1,"Options");
             if(GUI_SCALE==5)textprintf_ex(buffer,font_48,20,20,makecol(0,0,0),-1,"Options");
+            textprintf_ex(buffer,font_10,3,3,makecol(0,0,0),-1,"Path:%s",game_path);
 
 
             if(autoset_gui_scale)stretch_sprite(buffer,box_selected,30,(SCREEN_H-(350/GUI_SCALE))-(1200/GUI_SCALE),300/GUI_SCALE,300/GUI_SCALE);
@@ -619,15 +640,15 @@ void update(){
 
             }
         }
-        if(key[KEY_F9])set_gfx_mode(GFX_AUTODETECT, 640, 480, 0, 0);
-        if(key[KEY_F8])set_gfx_mode(GFX_AUTODETECT,800 , 600, 0, 0);
-        if(key[KEY_F7])set_gfx_mode(GFX_AUTODETECT, 1024, 768, 0, 0);
-        if(key[KEY_F6])set_gfx_mode(GFX_AUTODETECT,1280 ,1024 , 0, 0);
-        if(key[KEY_F5])set_gfx_mode(GFX_AUTODETECT,1366 ,768 , 0, 0);
-        if(key[KEY_F4])set_gfx_mode(GFX_AUTODETECT,1440 ,900 , 0, 0);
-        if(key[KEY_F])set_gfx_mode(GFX_AUTODETECT,1600 ,900 , 0, 0);
-        if(key[KEY_F])set_gfx_mode(GFX_AUTODETECT,1920 ,1080 , 0, 0);
-        if(key[KEY_F])set_gfx_mode(GFX_AUTODETECT,3840 ,2160 , 0, 0);
+        if(key[KEY_F9])change_resolution(640,480);
+        if(key[KEY_F8])change_resolution(800,600);
+        if(key[KEY_F7])change_resolution(1024,768);
+        if(key[KEY_F6])change_resolution(1280,1024);
+        if(key[KEY_F5])change_resolution(1366,768);
+        if(key[KEY_F4])change_resolution(1440,900);
+        if(key[KEY_F3])change_resolution(1600,900);
+        if(key[KEY_F2])change_resolution(1920,1080);
+        if(key[KEY_F1])change_resolution(3840,2160);
 
         //State independent reset key
         if(key[KEY_ESC]){
@@ -648,6 +669,8 @@ void update(){
 
         click_incrementer++;
         //Draw cursor and draw buffer to the screen
+
+
         draw_sprite(buffer,cursor,mouse_x,mouse_y);
         draw_sprite(screen,buffer,0,0);
 
@@ -800,7 +823,7 @@ void setup(){
 
 
 
-int main(){
+int main( int argc, char* argv[] ){
 
   srand(time(NULL));
   allegro_init();
@@ -810,7 +833,6 @@ int main(){
   install_mouse();
   set_color_depth(32);
   get_desktop_resolution(&get_width,&get_height);
-	 /* Got the resolution correctly */
 
   set_gfx_mode(GFX_AUTODETECT, get_width, get_height, 0, 0);
   install_sound(DIGI_AUTODETECT,MIDI_AUTODETECT,".");
@@ -827,6 +849,7 @@ int main(){
   buffer=create_bitmap(get_width,get_height);
   set_window_title("3 5 7");
   setup();
+  game_path=argv[0];
 
   	while(!GAME_STATE==EXIT){
         update();
