@@ -1,7 +1,7 @@
 #include<allegro.h>
 #include<alpng.h>
 #include<time.h>
-
+#include <iostream>
 
 #define EXIT 0
 #define MENU 1
@@ -36,7 +36,9 @@ int get_height;
 
 
 char* game_path;
-char* command_line;
+
+
+std::string command_line[10];
 
 bool commands = false;
 
@@ -858,8 +860,18 @@ int main( int argc, char* argv[] ){
 
   game_path=argv[0];
 
-  if( argc == 1) commands=false;
-    else{ command_line=argv[1]; commands=true;}
+  if( argc != 0) commands=false;
+    else{
+        command_line[0]=argv[1];
+        commands=true;
+
+        if(command_line[0]=="safe"){
+            change_resolution(800,600);
+        }
+        if(command_line[0]=="hwcursor"){
+            change_resolution(800,600);
+        }
+    }
 
 
 
