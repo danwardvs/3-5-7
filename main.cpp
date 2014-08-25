@@ -79,6 +79,7 @@ FONT* font_24;
 FONT* font_14;
 FONT* font_10;
 FONT* font_20;
+FONT* font_70;
 
 //Declare game variables
 int turn;
@@ -333,7 +334,7 @@ void update(){
             if(GUI_SCALE==7)textprintf_ex(buffer,font_34,90/GUI_SCALE,80/GUI_SCALE,makecol(0,0,0),-1,"3 5 7");
             if(GUI_SCALE==6)textprintf_ex(buffer,font_48,90/GUI_SCALE,80/GUI_SCALE,makecol(0,0,0),-1,"3 5 7");
             if(GUI_SCALE==5)textprintf_ex(buffer,font_48,90/GUI_SCALE,80/GUI_SCALE,makecol(0,0,0),-1,"3 5 7");
-            if(GUI_SCALE==4)textprintf_ex(buffer,font_48,90/GUI_SCALE,80/GUI_SCALE,makecol(0,0,0),-1,"3 5 7");
+            if(GUI_SCALE==4)textprintf_ex(buffer,font_70,60/GUI_SCALE,80/GUI_SCALE,makecol(0,0,0),-1,"3 5 7");
 
 
             if(GUI_SCALE==9)textprintf_ex(buffer,font_14,90/GUI_SCALE,450/GUI_SCALE,makecol(0,0,0),-1,"A game of logic and intellect.");
@@ -862,6 +863,17 @@ void setup(){
 
   //Merge temporary fonts to create "pixelart"
   font_40 = merge_fonts(f4, f5 = merge_fonts(f2, f3));
+
+   if(!(f1 = load_font("fonts/font_70.pcx", NULL, NULL))){
+    abort_on_error( "Cannot find fonts/font_70.pcx \n Please check your files and try again");
+  }
+  f2 = extract_font_range(f1, ' ', 'A'-1);
+  f3 = extract_font_range(f1, 'A', 'Z');
+  f4 = extract_font_range(f1, 'Z'+1, 'z');
+
+  //Merge temporary fonts to create "pixelart"
+  font_70 = merge_fonts(f4, f5 = merge_fonts(f2, f3));
+
 
 
 
