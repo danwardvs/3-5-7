@@ -31,8 +31,10 @@ int GAME_STATE;
 //Sets the Gui scale of the game
 int GUI_SCALE;
 
+
 int get_width;
 int get_height;
+bool fullscreen = true;
 
 
 char* game_path;
@@ -71,6 +73,7 @@ BITMAP* buffer;
 
 //Declare fonts
 FONT* font_48;
+FONT* font_40;
 FONT* font_34;
 FONT* font_24;
 FONT* font_14;
@@ -133,9 +136,13 @@ void end_ai_turn(){
 }
 void change_resolution(int newWidth, int newHeight){
 
-    if(set_gfx_mode(GFX_AUTODETECT, newWidth, newHeight, 0, 0)!=0)
-        abort_on_error("Failed to initialize graphics mode!");
-
+    if(fullscreen){
+        if(set_gfx_mode(GFX_AUTODETECT, newWidth, newHeight, 0, 0)!=0)
+            abort_on_error("Failed to initialize graphics mode!");
+    }else{
+         if(set_gfx_mode(GFX_AUTODETECT_WINDOWED, newWidth, newHeight, 0, 0)!=0)
+            abort_on_error("Failed to initialize graphics mode!");
+    }
     buffer=create_bitmap(get_width,get_height);
     if(SCREEN_W<3840)GUI_SCALE=1;
     if(SCREEN_W<1921)GUI_SCALE=2;
@@ -172,10 +179,9 @@ void update(){
             if(GUI_SCALE==8)textprintf_ex(buffer,font_20,20,20,makecol(0,0,0),-1,"Options");
             if(GUI_SCALE==7)textprintf_ex(buffer,font_24,20,20,makecol(0,0,0),-1,"Options");
             if(GUI_SCALE==6)textprintf_ex(buffer,font_34,20,20,makecol(0,0,0),-1,"Options");
-            if(GUI_SCALE==5)textprintf_ex(buffer,font_48,20,20,makecol(0,0,0),-1,"Options");
+            if(GUI_SCALE==5)textprintf_ex(buffer,font_40,20,20,makecol(0,0,0),-1,"Options");
+            if(GUI_SCALE==4)textprintf_ex(buffer,font_48,20,20,makecol(0,0,0),-1,"Options");
             textprintf_ex(buffer,font_10,3,3,makecol(0,0,0),-1,"Path:%s",game_path);
-            if(commands)textprintf_ex(buffer,font_10,3,15,makecol(0,0,0),-1,"Commands!:%s",command_line);
-
 
             if(autoset_gui_scale)stretch_sprite(buffer,box_selected,30,(SCREEN_H-(350/GUI_SCALE))-(1200/GUI_SCALE),300/GUI_SCALE,300/GUI_SCALE);
             if(!autoset_gui_scale)stretch_sprite(buffer,box,30,(SCREEN_H-(350/GUI_SCALE))-(1200/GUI_SCALE),300/GUI_SCALE,300/GUI_SCALE);
@@ -189,7 +195,12 @@ void update(){
                     click_incrementer=0;
             }
 
-            textprintf_ex(buffer,font_14,20,SCREEN_H-150,makecol(0,0,0),-1,"GUI Scale:%i",GUI_SCALE);
+           if(GUI_SCALE==9)textprintf_ex(buffer,font_14,20,SCREEN_H-(800/GUI_SCALE),makecol(0,0,0),-1,"GUI scale:%i",GUI_SCALE);
+            if(GUI_SCALE==8)textprintf_ex(buffer,font_20,20,SCREEN_H-(800/GUI_SCALE),makecol(0,0,0),-1,"GUI scale:%i",GUI_SCALE);
+            if(GUI_SCALE==7)textprintf_ex(buffer,font_24,20,SCREEN_H-(800/GUI_SCALE),makecol(0,0,0),-1,"GUI scale:%i",GUI_SCALE);
+            if(GUI_SCALE==6)textprintf_ex(buffer,font_34,20,SCREEN_H-(800/GUI_SCALE),makecol(0,0,0),-1,"GUI scale:%i",GUI_SCALE);
+            if(GUI_SCALE==5)textprintf_ex(buffer,font_34,20,SCREEN_H-(800/GUI_SCALE),makecol(0,0,0),-1,"GUI scale:%i",GUI_SCALE);
+            if(GUI_SCALE==4)textprintf_ex(buffer,font_40,20,SCREEN_H-(500/GUI_SCALE),makecol(0,0,0),-1,"GUI scale:%i",GUI_SCALE);
             draw_sprite(buffer,slider_gui_scale,25,SCREEN_H-50);
             draw_sprite(buffer,knob,(GUI_SCALE*50)-25,SCREEN_H-65);
 
@@ -221,35 +232,40 @@ void update(){
 
 
             }
-
-            if(turn_start==player_start)stretch_sprite(buffer,box_selected,30,(SCREEN_H-(350/GUI_SCALE))-(1200/GUI_SCALE),300/GUI_SCALE,300/GUI_SCALE);
-            if(turn_start!=player_start)stretch_sprite(buffer,box,30,(SCREEN_H-(350/GUI_SCALE))-(1200/GUI_SCALE),300/GUI_SCALE,300/GUI_SCALE);
-            if(turn_start==ai_start)stretch_sprite(buffer,box_selected,30,(SCREEN_H-(700/GUI_SCALE))-(1200/GUI_SCALE),300/GUI_SCALE,300/GUI_SCALE);
-            if(turn_start!=ai_start)stretch_sprite(buffer,box,30,(SCREEN_H-(700/GUI_SCALE))-(1200/GUI_SCALE),300/GUI_SCALE,300/GUI_SCALE);
-            if(turn_start==random_start)stretch_sprite(buffer,box_selected,30,(SCREEN_H-(1050/GUI_SCALE))-(1200/GUI_SCALE),300/GUI_SCALE,300/GUI_SCALE);
-            if(turn_start!=random_start)stretch_sprite(buffer,box,30,(SCREEN_H-(1050/GUI_SCALE))-(1200/GUI_SCALE),300/GUI_SCALE,300/GUI_SCALE);
-            if(mouse_b & 1 && collision(mouse_x,mouse_x,30,30+(300/GUI_SCALE), mouse_y,mouse_y,(SCREEN_H-(350/GUI_SCALE))-(1200/GUI_SCALE),(SCREEN_H-(350/GUI_SCALE))+((300/GUI_SCALE)-(1200/GUI_SCALE))))turn_start=player_start;
-            if(mouse_b & 1 && collision(mouse_x,mouse_x,30,30+(300/GUI_SCALE), mouse_y,mouse_y,(SCREEN_H-(700/GUI_SCALE))-(1200/GUI_SCALE),(SCREEN_H-(700/GUI_SCALE))+((300/GUI_SCALE)-(1200/GUI_SCALE))))turn_start=ai_start;
-            if(mouse_b & 1 && collision(mouse_x,mouse_x,30,30+(300/GUI_SCALE), mouse_y,mouse_y,(SCREEN_H-(1050/GUI_SCALE))-(1200/GUI_SCALE),(SCREEN_H-(1050/GUI_SCALE))+((300/GUI_SCALE)-(1200/GUI_SCALE))))turn_start=random_start;
+            int GUI_SCALE_FIXED;
+            if(GUI_SCALE>4)GUI_SCALE_FIXED=GUI_SCALE;
+            if(GUI_SCALE<5)GUI_SCALE_FIXED=5;
+            if(turn_start==player_start)stretch_sprite(buffer,box_selected,30,(SCREEN_H-(350/GUI_SCALE_FIXED))-(1200/GUI_SCALE_FIXED),300/GUI_SCALE_FIXED,300/GUI_SCALE_FIXED);
+            if(turn_start!=player_start)stretch_sprite(buffer,box,30,(SCREEN_H-(350/GUI_SCALE_FIXED))-(1200/GUI_SCALE_FIXED),300/GUI_SCALE_FIXED,300/GUI_SCALE_FIXED);
+            if(turn_start==ai_start)stretch_sprite(buffer,box_selected,30,(SCREEN_H-(700/GUI_SCALE_FIXED))-(1200/GUI_SCALE_FIXED),300/GUI_SCALE_FIXED,300/GUI_SCALE_FIXED);
+            if(turn_start!=ai_start)stretch_sprite(buffer,box,30,(SCREEN_H-(700/GUI_SCALE_FIXED))-(1200/GUI_SCALE_FIXED),300/GUI_SCALE_FIXED,300/GUI_SCALE_FIXED);
+            if(turn_start==random_start)stretch_sprite(buffer,box_selected,30,(SCREEN_H-(1050/GUI_SCALE_FIXED))-(1200/GUI_SCALE_FIXED),300/GUI_SCALE_FIXED,300/GUI_SCALE_FIXED);
+            if(turn_start!=random_start)stretch_sprite(buffer,box,30,(SCREEN_H-(1050/GUI_SCALE_FIXED))-(1200/GUI_SCALE_FIXED),300/GUI_SCALE_FIXED,300/GUI_SCALE_FIXED);
+            if(mouse_b & 1 && collision(mouse_x,mouse_x,30,30+(300/GUI_SCALE_FIXED), mouse_y,mouse_y,(SCREEN_H-(350/GUI_SCALE_FIXED))-(1200/GUI_SCALE_FIXED),(SCREEN_H-(350/GUI_SCALE_FIXED))+((300/GUI_SCALE_FIXED)-(1200/GUI_SCALE_FIXED))))turn_start=player_start;
+            if(mouse_b & 1 && collision(mouse_x,mouse_x,30,30+(300/GUI_SCALE_FIXED), mouse_y,mouse_y,(SCREEN_H-(700/GUI_SCALE_FIXED))-(1200/GUI_SCALE_FIXED),(SCREEN_H-(700/GUI_SCALE_FIXED))+((300/GUI_SCALE_FIXED)-(1200/GUI_SCALE_FIXED))))turn_start=ai_start;
+            if(mouse_b & 1 && collision(mouse_x,mouse_x,30,30+(300/GUI_SCALE_FIXED), mouse_y,mouse_y,(SCREEN_H-(1050/GUI_SCALE_FIXED))-(1200/GUI_SCALE_FIXED),(SCREEN_H-(1050/GUI_SCALE_FIXED))+((300/GUI_SCALE_FIXED)-(1200/GUI_SCALE_FIXED))))turn_start=random_start;
 
             if(GUI_SCALE==9)textprintf_ex(buffer,font_14,35+(300/GUI_SCALE),(SCREEN_H-(350/GUI_SCALE))-(1200/GUI_SCALE),makecol(0,0,0),-1,"Player Start");
             if(GUI_SCALE==8)textprintf_ex(buffer,font_20,35+(300/GUI_SCALE),(SCREEN_H-(350/GUI_SCALE))-(1200/GUI_SCALE),makecol(0,0,0),-1,"Player Start");
             if(GUI_SCALE==7)textprintf_ex(buffer,font_24,35+(300/GUI_SCALE),(SCREEN_H-(350/GUI_SCALE))-(1200/GUI_SCALE),makecol(0,0,0),-1,"Player Start");
             if(GUI_SCALE==6)textprintf_ex(buffer,font_34,35+(300/GUI_SCALE),(SCREEN_H-(350/GUI_SCALE))-(1200/GUI_SCALE),makecol(0,0,0),-1,"Player Start");
-            if(GUI_SCALE==5)textprintf_ex(buffer,font_48,35+(300/GUI_SCALE),(SCREEN_H-(350/GUI_SCALE))-(1200/GUI_SCALE),makecol(0,0,0),-1,"Player Start");
+            if(GUI_SCALE==5)textprintf_ex(buffer,font_34,35+(300/GUI_SCALE),(SCREEN_H-(350/GUI_SCALE))-(1200/GUI_SCALE),makecol(0,0,0),-1,"Player Start");
+            if(GUI_SCALE==4)textprintf_ex(buffer,font_40,35+(300/GUI_SCALE),(SCREEN_H-70)-240,makecol(0,0,0),-1,"Player Start");
 
             if(GUI_SCALE==9)textprintf_ex(buffer,font_14,35+(300/GUI_SCALE),(SCREEN_H-(700/GUI_SCALE))-(1200/GUI_SCALE),makecol(0,0,0),-1,"AI Start");
             if(GUI_SCALE==8)textprintf_ex(buffer,font_20,35+(300/GUI_SCALE),(SCREEN_H-(700/GUI_SCALE))-(1200/GUI_SCALE),makecol(0,0,0),-1,"AI Start");
             if(GUI_SCALE==7)textprintf_ex(buffer,font_24,35+(300/GUI_SCALE),(SCREEN_H-(700/GUI_SCALE))-(1200/GUI_SCALE),makecol(0,0,0),-1,"AI Start");
             if(GUI_SCALE==6)textprintf_ex(buffer,font_34,35+(300/GUI_SCALE),(SCREEN_H-(700/GUI_SCALE))-(1200/GUI_SCALE),makecol(0,0,0),-1,"AI Start");
-            if(GUI_SCALE==5)textprintf_ex(buffer,font_48,35+(300/GUI_SCALE),(SCREEN_H-(700/GUI_SCALE))-(1200/GUI_SCALE),makecol(0,0,0),-1,"AI Start");
+            if(GUI_SCALE==5)textprintf_ex(buffer,font_34,35+(300/GUI_SCALE),(SCREEN_H-(700/GUI_SCALE))-(1200/GUI_SCALE),makecol(0,0,0),-1,"AI Start");
+            if(GUI_SCALE==4)textprintf_ex(buffer,font_40,35+(300/GUI_SCALE),(SCREEN_H-140)-240,makecol(0,0,0),-1,"AI Start");
+
 
             if(GUI_SCALE==9)textprintf_ex(buffer,font_14,35+(300/GUI_SCALE),(SCREEN_H-(1050/GUI_SCALE))-(1200/GUI_SCALE),makecol(0,0,0),-1,"Random Start");
             if(GUI_SCALE==8)textprintf_ex(buffer,font_20,35+(300/GUI_SCALE),(SCREEN_H-(1050/GUI_SCALE))-(1200/GUI_SCALE),makecol(0,0,0),-1,"Random Start");
             if(GUI_SCALE==7)textprintf_ex(buffer,font_24,35+(300/GUI_SCALE),(SCREEN_H-(1050/GUI_SCALE))-(1200/GUI_SCALE),makecol(0,0,0),-1,"Random Start");
             if(GUI_SCALE==6)textprintf_ex(buffer,font_34,35+(300/GUI_SCALE),(SCREEN_H-(1050/GUI_SCALE))-(1200/GUI_SCALE),makecol(0,0,0),-1,"Random Start");
-            if(GUI_SCALE==5)textprintf_ex(buffer,font_48,35+(300/GUI_SCALE),(SCREEN_H-(1050/GUI_SCALE))-(1200/GUI_SCALE),makecol(0,0,0),-1,"Random Start");
-
+            if(GUI_SCALE==5)textprintf_ex(buffer,font_34,35+(300/GUI_SCALE),(SCREEN_H-(1050/GUI_SCALE))-(1200/GUI_SCALE),makecol(0,0,0),-1,"Random Start");
+            if(GUI_SCALE==4)textprintf_ex(buffer,font_40,35+(300/GUI_SCALE),(SCREEN_H-210)-240,makecol(0,0,0),-1,"Random Start");
 
 
             if(mouse_b & 1 && collision(mouse_x,mouse_x,ai_turn_delay-50,ai_turn_delay+50, mouse_y,mouse_y,SCREEN_H-100,SCREEN_H)){
@@ -262,37 +278,48 @@ void update(){
             if(GUI_SCALE==8)textprintf_ex(buffer,font_20,20,SCREEN_H-(800/GUI_SCALE),makecol(0,0,0),-1,"AI Thinking Time:%i",ai_turn_delay_real_value);
             if(GUI_SCALE==7)textprintf_ex(buffer,font_24,20,SCREEN_H-(800/GUI_SCALE),makecol(0,0,0),-1,"AI Thinking Time:%i",ai_turn_delay_real_value);
             if(GUI_SCALE==6)textprintf_ex(buffer,font_34,20,SCREEN_H-(800/GUI_SCALE),makecol(0,0,0),-1,"AI Thinking Time:%i",ai_turn_delay_real_value);
-            if(GUI_SCALE==5)textprintf_ex(buffer,font_48,20,SCREEN_H-(800/GUI_SCALE),makecol(0,0,0),-1,"AI Thinking Time:%i",ai_turn_delay_real_value);
+            if(GUI_SCALE==5)textprintf_ex(buffer,font_34,20,SCREEN_H-(800/GUI_SCALE),makecol(0,0,0),-1,"AI Thinking Time:%i",ai_turn_delay_real_value);
+            if(GUI_SCALE==4)textprintf_ex(buffer,font_40,20,SCREEN_H-(500/GUI_SCALE),makecol(0,0,0),-1,"AI Thinking Time:%i",ai_turn_delay_real_value);
 
             if(GUI_SCALE==9)textprintf_ex(buffer,font_14,90/GUI_SCALE,180/GUI_SCALE,makecol(0,0,0),-1,"Left click: Remove stone.");
             if(GUI_SCALE==8)textprintf_ex(buffer,font_20,90/GUI_SCALE,180/GUI_SCALE,makecol(0,0,0),-1,"Left click: Remove stone.");
             if(GUI_SCALE==7)textprintf_ex(buffer,font_24,90/GUI_SCALE,180/GUI_SCALE,makecol(0,0,0),-1,"Left click: Remove stone.");
             if(GUI_SCALE==6)textprintf_ex(buffer,font_34,90/GUI_SCALE,180/GUI_SCALE,makecol(0,0,0),-1,"Left click: Remove stone.");
-            if(GUI_SCALE==5)textprintf_ex(buffer,font_48,90/GUI_SCALE,180/GUI_SCALE,makecol(0,0,0),-1,"Left click: Remove stone.");
+            if(GUI_SCALE==5)textprintf_ex(buffer,font_34,90/GUI_SCALE,110/GUI_SCALE,makecol(0,0,0),-1,"Left click: Remove stone.");
+            if(GUI_SCALE==4)textprintf_ex(buffer,font_40,90/GUI_SCALE,110/GUI_SCALE,makecol(0,0,0),-1,"Left click:Remove stone.");
+
 
             if(GUI_SCALE==9)textprintf_ex(buffer,font_14,90/GUI_SCALE,(180/GUI_SCALE)*3,makecol(0,0,0),-1,"Right click: Reset turn.");
             if(GUI_SCALE==8)textprintf_ex(buffer,font_20,90/GUI_SCALE,(180/GUI_SCALE)*3,makecol(0,0,0),-1,"Right click: Reset turn.");
             if(GUI_SCALE==7)textprintf_ex(buffer,font_24,90/GUI_SCALE,(180/GUI_SCALE)*3,makecol(0,0,0),-1,"Right click: Reset turn.");
             if(GUI_SCALE==6)textprintf_ex(buffer,font_34,90/GUI_SCALE,(180/GUI_SCALE)*3,makecol(0,0,0),-1,"Right click: Reset turn.");
-            if(GUI_SCALE==5)textprintf_ex(buffer,font_48,90/GUI_SCALE,(180/GUI_SCALE)*3,makecol(0,0,0),-1,"Right click: Reset turn.");
+            if(GUI_SCALE==5)textprintf_ex(buffer,font_34,90/GUI_SCALE,(120/GUI_SCALE)*3,makecol(0,0,0),-1,"Right click: Reset turn.");
+            if(GUI_SCALE==4)textprintf_ex(buffer,font_40,90/GUI_SCALE,(120/GUI_SCALE)*3,makecol(0,0,0),-1,"Right click: Reset turn.");
+
 
             if(GUI_SCALE==9)textprintf_ex(buffer,font_14,90/GUI_SCALE,(180/GUI_SCALE)*5,makecol(0,0,0),-1,"Space: Finish turn.");
             if(GUI_SCALE==8)textprintf_ex(buffer,font_20,90/GUI_SCALE,(180/GUI_SCALE)*5,makecol(0,0,0),-1,"Space: Finish turn.");
             if(GUI_SCALE==7)textprintf_ex(buffer,font_24,90/GUI_SCALE,(180/GUI_SCALE)*5,makecol(0,0,0),-1,"Space: Finish turn.");
             if(GUI_SCALE==6)textprintf_ex(buffer,font_34,90/GUI_SCALE,(180/GUI_SCALE)*5,makecol(0,0,0),-1,"Space: Finish turn.");
-            if(GUI_SCALE==5)textprintf_ex(buffer,font_48,90/GUI_SCALE,(180/GUI_SCALE)*5,makecol(0,0,0),-1,"Space: Finish turn.");
+            if(GUI_SCALE==5)textprintf_ex(buffer,font_34,90/GUI_SCALE,(120/GUI_SCALE)*5,makecol(0,0,0),-1,"Space: Finish turn.");
+            if(GUI_SCALE==4)textprintf_ex(buffer,font_40,90/GUI_SCALE,(120/GUI_SCALE)*5,makecol(0,0,0),-1,"Space: Finish turn.");
+
 
             if(GUI_SCALE==9)textprintf_ex(buffer,font_14,90/GUI_SCALE,(180/GUI_SCALE)*7,makecol(0,0,0),-1,"Enter: Reset Game.");
             if(GUI_SCALE==8)textprintf_ex(buffer,font_20,90/GUI_SCALE,(180/GUI_SCALE)*7,makecol(0,0,0),-1,"Enter: Reset Game.");
             if(GUI_SCALE==7)textprintf_ex(buffer,font_24,90/GUI_SCALE,(180/GUI_SCALE)*7,makecol(0,0,0),-1,"Enter: Reset Game.");
             if(GUI_SCALE==6)textprintf_ex(buffer,font_34,90/GUI_SCALE,(180/GUI_SCALE)*7,makecol(0,0,0),-1,"Enter: Reset Game.");
-            if(GUI_SCALE==5)textprintf_ex(buffer,font_48,90/GUI_SCALE,(180/GUI_SCALE)*7,makecol(0,0,0),-1,"Enter: Reset Game.");
+            if(GUI_SCALE==5)textprintf_ex(buffer,font_34,90/GUI_SCALE,(120/GUI_SCALE)*7,makecol(0,0,0),-1,"Enter: Reset Game.");
+            if(GUI_SCALE==4)textprintf_ex(buffer,font_40,90/GUI_SCALE,(120/GUI_SCALE)*7,makecol(0,0,0),-1,"Enter: Reset Game.");
+
 
             if(GUI_SCALE==9)textprintf_ex(buffer,font_14,90/GUI_SCALE,(180/GUI_SCALE)*9,makecol(0,0,0),-1,"ESC: Pause/Exit Game.");
             if(GUI_SCALE==8)textprintf_ex(buffer,font_20,90/GUI_SCALE,(180/GUI_SCALE)*9,makecol(0,0,0),-1,"ESC: Pause/Exit Game.");
             if(GUI_SCALE==7)textprintf_ex(buffer,font_24,90/GUI_SCALE,(180/GUI_SCALE)*9,makecol(0,0,0),-1,"ESC: Pause/Exit Game.");
             if(GUI_SCALE==6)textprintf_ex(buffer,font_34,90/GUI_SCALE,(180/GUI_SCALE)*9,makecol(0,0,0),-1,"ESC: Pause/Exit Game.");
-            if(GUI_SCALE==5)textprintf_ex(buffer,font_48,90/GUI_SCALE,(180/GUI_SCALE)*9,makecol(0,0,0),-1,"ESC: Pause/Exit Game.");
+            if(GUI_SCALE==5)textprintf_ex(buffer,font_34,90/GUI_SCALE,(120/GUI_SCALE)*9,makecol(0,0,0),-1,"ESC: Pause/Exit Game.");
+            if(GUI_SCALE==4)textprintf_ex(buffer,font_40,90/GUI_SCALE,(120/GUI_SCALE)*9,makecol(0,0,0),-1,"ESC: Pause/Exit Game.");
+
         }
         //Main menu loop
         if(GAME_STATE==MENU){
@@ -301,12 +328,20 @@ void update(){
             stretch_sprite(buffer,title_screen,0,0,SCREEN_W,SCREEN_H);
             //textprintf_ex(buffer,font_48,40,20,makecol(0,0,0),-1,"3 5 7");
             //textprintf_ex(buffer,font_24,40,90,makecol(0,0,0),-1,"A game of logic and intellect.");
-            if(GUI_SCALE==9)textprintf_ex(buffer,font_14,90/GUI_SCALE,180/GUI_SCALE,makecol(0,0,0),-1,"A game of logic and intellect.");
-            if(GUI_SCALE==8)textprintf_ex(buffer,font_20,90/GUI_SCALE,180/GUI_SCALE,makecol(0,0,0),-1,"A game of logic and intellect.");
-            if(GUI_SCALE==7)textprintf_ex(buffer,font_24,90/GUI_SCALE,180/GUI_SCALE,makecol(0,0,0),-1,"A game of logic and intellect.");
-            if(GUI_SCALE==6)textprintf_ex(buffer,font_34,90/GUI_SCALE,180/GUI_SCALE,makecol(0,0,0),-1,"A game of logic and intellect.");
-            if(GUI_SCALE==5)textprintf_ex(buffer,font_48,90/GUI_SCALE,180/GUI_SCALE,makecol(0,0,0),-1,"A game of logic and intellect.");
+            if(GUI_SCALE==9)textprintf_ex(buffer,font_24,90/GUI_SCALE,80/GUI_SCALE,makecol(0,0,0),-1,"3 5 7");
+            if(GUI_SCALE==8)textprintf_ex(buffer,font_34,90/GUI_SCALE,80/GUI_SCALE,makecol(0,0,0),-1,"3 5 7");
+            if(GUI_SCALE==7)textprintf_ex(buffer,font_34,90/GUI_SCALE,80/GUI_SCALE,makecol(0,0,0),-1,"3 5 7");
+            if(GUI_SCALE==6)textprintf_ex(buffer,font_48,90/GUI_SCALE,80/GUI_SCALE,makecol(0,0,0),-1,"3 5 7");
+            if(GUI_SCALE==5)textprintf_ex(buffer,font_48,90/GUI_SCALE,80/GUI_SCALE,makecol(0,0,0),-1,"3 5 7");
+            if(GUI_SCALE==4)textprintf_ex(buffer,font_48,90/GUI_SCALE,80/GUI_SCALE,makecol(0,0,0),-1,"3 5 7");
 
+
+            if(GUI_SCALE==9)textprintf_ex(buffer,font_14,90/GUI_SCALE,450/GUI_SCALE,makecol(0,0,0),-1,"A game of logic and intellect.");
+            if(GUI_SCALE==8)textprintf_ex(buffer,font_20,90/GUI_SCALE,450/GUI_SCALE,makecol(0,0,0),-1,"A game of logic and intellect.");
+            if(GUI_SCALE==7)textprintf_ex(buffer,font_24,90/GUI_SCALE,450/GUI_SCALE,makecol(0,0,0),-1,"A game of logic and intellect.");
+            if(GUI_SCALE==6)textprintf_ex(buffer,font_34,90/GUI_SCALE,450/GUI_SCALE,makecol(0,0,0),-1,"A game of logic and intellect.");
+            if(GUI_SCALE==5)textprintf_ex(buffer,font_34,90/GUI_SCALE,450/GUI_SCALE,makecol(0,0,0),-1,"A game of logic and intellect.");
+            if(GUI_SCALE==4)textprintf_ex(buffer,font_40,90/GUI_SCALE,450/GUI_SCALE,makecol(0,0,0),-1,"A game of logic and intellect.");
 
             draw_sprite(buffer,play_button,(SCREEN_W/2)-150,SCREEN_H/2);
             stretch_sprite(buffer,settings,SCREEN_W-(800/GUI_SCALE),SCREEN_H-(800/GUI_SCALE),800/GUI_SCALE,800/GUI_SCALE);
@@ -349,8 +384,8 @@ void update(){
                 //Draw background for game
                 draw_sprite(buffer,game_background,0,0);
 
-                if(game_ending==player_win)textprintf_ex(buffer,font_48,400,20,makecol(0,0,0),-1,"Player wins!");
-                if(game_ending==ai_win)textprintf_ex(buffer,font_48,400,20,makecol(0,0,0),-1,"AI wins!");
+                if(game_ending==player_win)textprintf_ex(buffer,font_40,400,20,makecol(0,0,0),-1,"Player wins!");
+                if(game_ending==ai_win)textprintf_ex(buffer,font_40,400,20,makecol(0,0,0),-1,"AI wins!");
 
 
 
@@ -818,6 +853,17 @@ void setup(){
   //Merge temporary fonts to create "pixelart"
   font_20 = merge_fonts(f4, f5 = merge_fonts(f2, f3));
 
+  if(!(f1 = load_font("fonts/font_40.pcx", NULL, NULL))){
+    abort_on_error( "Cannot find fonts/font_40.pcx \n Please check your files and try again");
+  }
+  f2 = extract_font_range(f1, ' ', 'A'-1);
+  f3 = extract_font_range(f1, 'A', 'Z');
+  f4 = extract_font_range(f1, 'Z'+1, 'z');
+
+  //Merge temporary fonts to create "pixelart"
+  font_40 = merge_fonts(f4, f5 = merge_fonts(f2, f3));
+
+
 
   destroy_font(f1);
   destroy_font(f2);
@@ -860,16 +906,25 @@ int main( int argc, char* argv[] ){
 
   game_path=argv[0];
 
-  if( argc != 0) commands=false;
+  if( argc == 0) commands=false;
     else{
-        command_line[0]=argv[1];
+
         commands=true;
 
-        if(command_line[0]=="safe"){
-            change_resolution(800,600);
+        for (int i = 0; i < argc; i++){
+            command_line[i]=argv[i];
         }
-        if(command_line[0]=="hwcursor"){
-            change_resolution(800,600);
+        for (int i = 0; i < argc; i++){
+            if(command_line[i]=="safe"){
+                change_resolution(800,600);
+            }
+            if(command_line[i]=="windowed"){
+                fullscreen=false;
+                change_resolution(SCREEN_W,SCREEN_H);
+            }
+
+
+
         }
     }
 
