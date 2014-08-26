@@ -82,6 +82,7 @@ FONT* font_20;
 FONT* font_70;
 FONT* font_80;
 
+
 //Declare game variables
 int turn;
 int turn_init;
@@ -182,7 +183,8 @@ void update(){
             if(GUI_SCALE==7)textprintf_ex(buffer,font_24,20,20,makecol(0,0,0),-1,"Options");
             if(GUI_SCALE==6)textprintf_ex(buffer,font_34,20,20,makecol(0,0,0),-1,"Options");
             if(GUI_SCALE==5)textprintf_ex(buffer,font_40,20,20,makecol(0,0,0),-1,"Options");
-            if(GUI_SCALE==4)textprintf_ex(buffer,font_48,20,20,makecol(0,0,0),-1,"Options");
+            if(GUI_SCALE<5)textprintf_ex(buffer,font_48,20,20,makecol(0,0,0),-1,"Options");
+
             textprintf_ex(buffer,font_10,3,3,makecol(0,0,0),-1,"Path:%s",game_path);
 
             if(autoset_gui_scale)stretch_sprite(buffer,box_selected,30,(SCREEN_H-(350/GUI_SCALE))-(1200/GUI_SCALE),300/GUI_SCALE,300/GUI_SCALE);
@@ -203,7 +205,7 @@ void update(){
             if(GUI_SCALE==6)textprintf_ex(buffer,font_34,20,SCREEN_H-(800/GUI_SCALE),makecol(0,0,0),-1,"GUI scale:%i",GUI_SCALE);
             if(GUI_SCALE==5)textprintf_ex(buffer,font_34,20,SCREEN_H-(600/GUI_SCALE),makecol(0,0,0),-1,"GUI scale:%i",GUI_SCALE);
             if(GUI_SCALE==4)textprintf_ex(buffer,font_40,20,SCREEN_H-(500/GUI_SCALE),makecol(0,0,0),-1,"GUI scale:%i",GUI_SCALE);
-            if(GUI_SCALE==3)textprintf_ex(buffer,font_40,20,SCREEN_H-(400/GUI_SCALE),makecol(0,0,0),-1,"GUI scale:%i",GUI_SCALE);
+            if(GUI_SCALE<4)textprintf_ex(buffer,font_40,20,SCREEN_H-(400/GUI_SCALE),makecol(0,0,0),-1,"GUI scale:%i",GUI_SCALE);
 
             draw_sprite(buffer,slider_gui_scale,25,SCREEN_H-50);
             draw_sprite(buffer,knob,(GUI_SCALE*50)-25,SCREEN_H-65);
@@ -254,14 +256,14 @@ void update(){
             if(GUI_SCALE==7)textprintf_ex(buffer,font_24,35+(300/GUI_SCALE),(SCREEN_H-(350/GUI_SCALE))-(1200/GUI_SCALE),makecol(0,0,0),-1,"Player Start");
             if(GUI_SCALE==6)textprintf_ex(buffer,font_34,35+(300/GUI_SCALE),(SCREEN_H-(350/GUI_SCALE))-(1200/GUI_SCALE),makecol(0,0,0),-1,"Player Start");
             if(GUI_SCALE==5)textprintf_ex(buffer,font_34,35+(300/GUI_SCALE),(SCREEN_H-(350/GUI_SCALE))-(1200/GUI_SCALE),makecol(0,0,0),-1,"Player Start");
-            if(GUI_SCALE==4 || GUI_SCALE==3)textprintf_ex(buffer,font_40,35+(300/GUI_SCALE),(SCREEN_H-70)-240,makecol(0,0,0),-1,"Player Start");
+            if(GUI_SCALE<5)textprintf_ex(buffer,font_40,35+(300/GUI_SCALE),(SCREEN_H-70)-240,makecol(0,0,0),-1,"Player Start");
 
             if(GUI_SCALE==9)textprintf_ex(buffer,font_14,35+(300/GUI_SCALE),(SCREEN_H-(700/GUI_SCALE))-(1200/GUI_SCALE),makecol(0,0,0),-1,"AI Start");
             if(GUI_SCALE==8)textprintf_ex(buffer,font_20,35+(300/GUI_SCALE),(SCREEN_H-(700/GUI_SCALE))-(1200/GUI_SCALE),makecol(0,0,0),-1,"AI Start");
             if(GUI_SCALE==7)textprintf_ex(buffer,font_24,35+(300/GUI_SCALE),(SCREEN_H-(700/GUI_SCALE))-(1200/GUI_SCALE),makecol(0,0,0),-1,"AI Start");
             if(GUI_SCALE==6)textprintf_ex(buffer,font_34,35+(300/GUI_SCALE),(SCREEN_H-(700/GUI_SCALE))-(1200/GUI_SCALE),makecol(0,0,0),-1,"AI Start");
             if(GUI_SCALE==5)textprintf_ex(buffer,font_34,35+(300/GUI_SCALE),(SCREEN_H-(700/GUI_SCALE))-(1200/GUI_SCALE),makecol(0,0,0),-1,"AI Start");
-            if(GUI_SCALE==4 || GUI_SCALE==3)textprintf_ex(buffer,font_40,35+(300/GUI_SCALE),(SCREEN_H-140)-240,makecol(0,0,0),-1,"AI Start");
+            if(GUI_SCALE<5)textprintf_ex(buffer,font_40,35+(300/GUI_SCALE),(SCREEN_H-140)-240,makecol(0,0,0),-1,"AI Start");
 
 
             if(GUI_SCALE==9)textprintf_ex(buffer,font_14,35+(300/GUI_SCALE),(SCREEN_H-(1050/GUI_SCALE))-(1200/GUI_SCALE),makecol(0,0,0),-1,"Random Start");
@@ -269,7 +271,7 @@ void update(){
             if(GUI_SCALE==7)textprintf_ex(buffer,font_24,35+(300/GUI_SCALE),(SCREEN_H-(1050/GUI_SCALE))-(1200/GUI_SCALE),makecol(0,0,0),-1,"Random Start");
             if(GUI_SCALE==6)textprintf_ex(buffer,font_34,35+(300/GUI_SCALE),(SCREEN_H-(1050/GUI_SCALE))-(1200/GUI_SCALE),makecol(0,0,0),-1,"Random Start");
             if(GUI_SCALE==5)textprintf_ex(buffer,font_34,35+(300/GUI_SCALE),(SCREEN_H-(1050/GUI_SCALE))-(1200/GUI_SCALE),makecol(0,0,0),-1,"Random Start");
-            if(GUI_SCALE==4 || GUI_SCALE==3)textprintf_ex(buffer,font_40,35+(300/GUI_SCALE),(SCREEN_H-210)-240,makecol(0,0,0),-1,"Random Start");
+            if(GUI_SCALE<5)textprintf_ex(buffer,font_40,35+(300/GUI_SCALE),(SCREEN_H-210)-240,makecol(0,0,0),-1,"Random Start");
 
 
             if(mouse_b & 1 && collision(mouse_x,mouse_x,ai_turn_delay-50,ai_turn_delay+50, mouse_y,mouse_y,SCREEN_H-100,SCREEN_H)){
@@ -284,7 +286,7 @@ void update(){
             if(GUI_SCALE==6)textprintf_ex(buffer,font_34,20,SCREEN_H-(800/GUI_SCALE),makecol(0,0,0),-1,"AI Thinking Time:%i",ai_turn_delay_real_value);
             if(GUI_SCALE==5)textprintf_ex(buffer,font_34,20,SCREEN_H-(700/GUI_SCALE),makecol(0,0,0),-1,"AI Thinking Time:%i",ai_turn_delay_real_value);
             if(GUI_SCALE==4)textprintf_ex(buffer,font_40,20,SCREEN_H-(500/GUI_SCALE),makecol(0,0,0),-1,"AI Thinking Time:%i",ai_turn_delay_real_value);
-            if(GUI_SCALE==3)textprintf_ex(buffer,font_40,20,SCREEN_H-(400/GUI_SCALE),makecol(0,0,0),-1,"AI Thinking Time:%i",ai_turn_delay_real_value);
+            if(GUI_SCALE<4)textprintf_ex(buffer,font_40,20,SCREEN_H-(400/GUI_SCALE),makecol(0,0,0),-1,"AI Thinking Time:%i",ai_turn_delay_real_value);
 
             if(GUI_SCALE==9)textprintf_ex(buffer,font_14,90/GUI_SCALE,180/GUI_SCALE,makecol(0,0,0),-1,"Left click: Remove stone.");
             if(GUI_SCALE==8)textprintf_ex(buffer,font_20,90/GUI_SCALE,180/GUI_SCALE,makecol(0,0,0),-1,"Left click: Remove stone.");
@@ -292,7 +294,7 @@ void update(){
             if(GUI_SCALE==6)textprintf_ex(buffer,font_34,90/GUI_SCALE,180/GUI_SCALE,makecol(0,0,0),-1,"Left click: Remove stone.");
             if(GUI_SCALE==5)textprintf_ex(buffer,font_34,90/GUI_SCALE,110/GUI_SCALE,makecol(0,0,0),-1,"Left click: Remove stone.");
             if(GUI_SCALE==4)textprintf_ex(buffer,font_40,90/GUI_SCALE,110/GUI_SCALE,makecol(0,0,0),-1,"Left click:Remove stone.");
-            if(GUI_SCALE==3)textprintf_ex(buffer,font_40,90/GUI_SCALE,110/GUI_SCALE,makecol(0,0,0),-1,"Left click:Remove stone.");
+            if(GUI_SCALE<4)textprintf_ex(buffer,font_40,90/GUI_SCALE,110/GUI_SCALE,makecol(0,0,0),-1,"Left click:Remove stone.");
 
 
             if(GUI_SCALE==9)textprintf_ex(buffer,font_14,90/GUI_SCALE,(180/GUI_SCALE)*3,makecol(0,0,0),-1,"Right click: Reset turn.");
@@ -301,7 +303,7 @@ void update(){
             if(GUI_SCALE==6)textprintf_ex(buffer,font_34,90/GUI_SCALE,(180/GUI_SCALE)*3,makecol(0,0,0),-1,"Right click: Reset turn.");
             if(GUI_SCALE==5)textprintf_ex(buffer,font_34,90/GUI_SCALE,(120/GUI_SCALE)*3,makecol(0,0,0),-1,"Right click: Reset turn.");
             if(GUI_SCALE==4)textprintf_ex(buffer,font_40,90/GUI_SCALE,(120/GUI_SCALE)*3,makecol(0,0,0),-1,"Right click: Reset turn.");
-            if(GUI_SCALE==3)textprintf_ex(buffer,font_40,90/GUI_SCALE,(120/GUI_SCALE)*3,makecol(0,0,0),-1,"Right click: Reset turn.");
+            if(GUI_SCALE<4)textprintf_ex(buffer,font_40,90/GUI_SCALE,(120/GUI_SCALE)*3,makecol(0,0,0),-1,"Right click: Reset turn.");
 
 
             if(GUI_SCALE==9)textprintf_ex(buffer,font_14,90/GUI_SCALE,(180/GUI_SCALE)*5,makecol(0,0,0),-1,"Space: Finish turn.");
@@ -310,7 +312,7 @@ void update(){
             if(GUI_SCALE==6)textprintf_ex(buffer,font_34,90/GUI_SCALE,(180/GUI_SCALE)*5,makecol(0,0,0),-1,"Space: Finish turn.");
             if(GUI_SCALE==5)textprintf_ex(buffer,font_34,90/GUI_SCALE,(120/GUI_SCALE)*5,makecol(0,0,0),-1,"Space: Finish turn.");
             if(GUI_SCALE==4)textprintf_ex(buffer,font_40,90/GUI_SCALE,(120/GUI_SCALE)*5,makecol(0,0,0),-1,"Space: Finish turn.");
-            if(GUI_SCALE==3)textprintf_ex(buffer,font_40,90/GUI_SCALE,(120/GUI_SCALE)*5,makecol(0,0,0),-1,"Space: Finish turn.");
+            if(GUI_SCALE<4)textprintf_ex(buffer,font_40,90/GUI_SCALE,(120/GUI_SCALE)*5,makecol(0,0,0),-1,"Space: Finish turn.");
 
 
             if(GUI_SCALE==9)textprintf_ex(buffer,font_14,90/GUI_SCALE,(180/GUI_SCALE)*7,makecol(0,0,0),-1,"Enter: Reset Game.");
@@ -319,7 +321,7 @@ void update(){
             if(GUI_SCALE==6)textprintf_ex(buffer,font_34,90/GUI_SCALE,(180/GUI_SCALE)*7,makecol(0,0,0),-1,"Enter: Reset Game.");
             if(GUI_SCALE==5)textprintf_ex(buffer,font_34,90/GUI_SCALE,(120/GUI_SCALE)*7,makecol(0,0,0),-1,"Enter: Reset Game.");
             if(GUI_SCALE==4)textprintf_ex(buffer,font_40,90/GUI_SCALE,(120/GUI_SCALE)*7,makecol(0,0,0),-1,"Enter: Reset Game.");
-            if(GUI_SCALE==3)textprintf_ex(buffer,font_40,90/GUI_SCALE,(120/GUI_SCALE)*7,makecol(0,0,0),-1,"Enter: Reset Game.");
+            if(GUI_SCALE<4)textprintf_ex(buffer,font_40,90/GUI_SCALE,(120/GUI_SCALE)*7,makecol(0,0,0),-1,"Enter: Reset Game.");
 
 
             if(GUI_SCALE==9)textprintf_ex(buffer,font_14,90/GUI_SCALE,(180/GUI_SCALE)*9,makecol(0,0,0),-1,"ESC: Pause/Exit Game.");
@@ -328,7 +330,7 @@ void update(){
             if(GUI_SCALE==6)textprintf_ex(buffer,font_34,90/GUI_SCALE,(180/GUI_SCALE)*9,makecol(0,0,0),-1,"ESC: Pause/Exit Game.");
             if(GUI_SCALE==5)textprintf_ex(buffer,font_34,90/GUI_SCALE,(120/GUI_SCALE)*9,makecol(0,0,0),-1,"ESC: Pause/Exit Game.");
             if(GUI_SCALE==4)textprintf_ex(buffer,font_40,90/GUI_SCALE,(120/GUI_SCALE)*9,makecol(0,0,0),-1,"ESC: Pause/Exit Game.");
-            if(GUI_SCALE==3)textprintf_ex(buffer,font_40,90/GUI_SCALE,(120/GUI_SCALE)*9,makecol(0,0,0),-1,"ESC: Pause/Exit Game.");
+            if(GUI_SCALE<4)textprintf_ex(buffer,font_40,90/GUI_SCALE,(120/GUI_SCALE)*9,makecol(0,0,0),-1,"ESC: Pause/Exit Game.");
 
         }
         //Main menu loop
@@ -344,7 +346,7 @@ void update(){
             if(GUI_SCALE==6)textprintf_ex(buffer,font_48,90/GUI_SCALE,50/GUI_SCALE,makecol(0,0,0),-1,"3 5 7");
             if(GUI_SCALE==5)textprintf_ex(buffer,font_48,90/GUI_SCALE,40/GUI_SCALE,makecol(0,0,0),-1,"3 5 7");
             if(GUI_SCALE==4)textprintf_ex(buffer,font_70,90/GUI_SCALE,30/GUI_SCALE,makecol(0,0,0),-1,"3 5 7");
-            if(GUI_SCALE==3)textprintf_ex(buffer,font_80,90/GUI_SCALE,20/GUI_SCALE,makecol(0,0,0),-1,"3 5 7");
+            if(GUI_SCALE<4)textprintf_ex(buffer,font_80,90/GUI_SCALE,20/GUI_SCALE,makecol(0,0,0),-1,"3 5 7");
 
             if(GUI_SCALE==9)textprintf_ex(buffer,font_14,90/GUI_SCALE,450/GUI_SCALE,makecol(0,0,0),-1,"A game of logic and intellect.");
             if(GUI_SCALE==8)textprintf_ex(buffer,font_20,90/GUI_SCALE,450/GUI_SCALE,makecol(0,0,0),-1,"A game of logic and intellect.");
@@ -352,11 +354,11 @@ void update(){
             if(GUI_SCALE==6)textprintf_ex(buffer,font_34,90/GUI_SCALE,450/GUI_SCALE,makecol(0,0,0),-1,"A game of logic and intellect.");
             if(GUI_SCALE==5)textprintf_ex(buffer,font_34,90/GUI_SCALE,450/GUI_SCALE,makecol(0,0,0),-1,"A game of logic and intellect.");
             if(GUI_SCALE==4)textprintf_ex(buffer,font_40,90/GUI_SCALE,400/GUI_SCALE,makecol(0,0,0),-1,"A game of logic and intellect.");
-            if(GUI_SCALE==3)textprintf_ex(buffer,font_40,90/GUI_SCALE,400/GUI_SCALE,makecol(0,0,0),-1,"A game of logic and intellect.");
+            if(GUI_SCALE<4)textprintf_ex(buffer,font_40,90/GUI_SCALE,400/GUI_SCALE,makecol(0,0,0),-1,"A game of logic and intellect.");
 
             draw_sprite(buffer,play_button,(SCREEN_W/2)-150,SCREEN_H/2);
             if(GUI_SCALE>3)stretch_sprite(buffer,settings,SCREEN_W-(800/GUI_SCALE),SCREEN_H-(800/GUI_SCALE),800/GUI_SCALE,800/GUI_SCALE);
-            if(GUI_SCALE==3)stretch_sprite(buffer,settings,SCREEN_W-200,SCREEN_H-200,200,200);
+            if(GUI_SCALE<4)stretch_sprite(buffer,settings,SCREEN_W-200,SCREEN_H-200,200,200);
 
             textprintf_ex(buffer,font_48,(SCREEN_W/2)-125,(SCREEN_H/2)+10,makecol(0,0,0),-1,"PLAY");
 
@@ -824,6 +826,7 @@ void setup(){
   //Merge temporary fonts to create "pixelart"
   font_24 = merge_fonts(f4, f5 = merge_fonts(f2, f3));
 
+
    if(!(f1 = load_font("fonts/font_10.pcx", NULL, NULL))){
     abort_on_error( "Cannot find fonts/font_10.pcx \n Please check your files and try again");
   }
@@ -833,6 +836,7 @@ void setup(){
 
   //Merge temporary fonts to create "pixelart"
   font_10 = merge_fonts(f4, f5 = merge_fonts(f2, f3));
+  font = merge_fonts(f4, f5 = merge_fonts(f2, f3));
 
   if(!(f1 = load_font("fonts/font_14.pcx", NULL, NULL))){
     abort_on_error( "Cannot find fonts/font_14.pcx \n Please check your files and try again");
