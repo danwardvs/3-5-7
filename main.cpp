@@ -1,7 +1,11 @@
-#include<allegro.h>
-#include<alpng.h>
-#include<time.h>
-#include <iostream>
+#include<allegro.h> //Graphics library
+#include<alpng.h>  //Loading .png files
+#include<time.h>  //Gets the time for random number seed
+#include <fstream>  //File io
+#include <string>  //Strings for file io
+#include <iostream>  //File io
+
+using namespace std;  // File io
 
 #define EXIT 0
 #define MENU 1
@@ -41,6 +45,8 @@ char* game_path;
 
 
 std::string command_line[10];
+
+std::string stats[10];
 
 bool commands = false;
 
@@ -99,6 +105,52 @@ int five_pile=5;
 int seven_pile=7;
 
 int click_incrementer;
+//File reset function
+void reset_stats(){
+    ofstream myfile;
+    myfile.open ("stats.txt");
+    for(int i = 0; i<10; i++){
+        myfile << "0\n";
+    }
+    myfile.close();
+
+
+}
+//Convert string to int
+int convertStringToInt(string newString){
+  int result;
+  stringstream(newString) >> result;
+  return result;
+}
+
+//Convert int to string
+string convertInt(int number){
+   stringstream ss;
+   ss << number;
+   return ss.str();
+}
+
+//File reading function
+void read_stats(){
+    ifstream read("stats.txt");
+    for (int i = 0; i < 10; i++){
+        read>>stats[i];
+    }
+    read.close();
+}
+
+//File writing function
+void write_stats(){
+    ofstream myfile;
+    myfile.open ("stats.txt");
+    for(int i = 0; i<10; i++){
+        myfile << stats[i];
+        myfile << "\n";
+    }
+    myfile.close();
+
+}
+
 
 //A function that handles error messages
 void abort_on_error(const char *message){
@@ -361,6 +413,7 @@ void update(){
             if(GUI_SCALE<4)stretch_sprite(buffer,settings,SCREEN_W-200,SCREEN_H-200,200,200);
 
             textprintf_ex(buffer,font_48,(SCREEN_W/2)-125,(SCREEN_H/2)+10,makecol(0,0,0),-1,"PLAY");
+            textprintf_ex(buffer,font_10,3,3,makecol(0,0,0),-1,"Games Played%s",stats[0].c_str());
 
           if(mouse_b & 1 && collision(mouse_x,mouse_x,SCREEN_W-(800/GUI_SCALE),SCREEN_W, mouse_y,mouse_y,SCREEN_H-(800/GUI_SCALE),SCREEN_H))
              GAME_STATE=OPTIONS;
@@ -380,6 +433,7 @@ void update(){
                 //if(key[KEY_ENTER])turn=player;
 
                 if(key[KEY_ENTER]){
+
                     three_pile=3;
                     five_pile=5;
                     seven_pile=7;
@@ -397,7 +451,7 @@ void update(){
                 while(key[KEY_ENTER]){}
 
                 //Draw background for game
-                draw_sprite(buffer,game_background,0,0);
+                stretch_sprite(buffer,game_background,0,0,SCREEN_W,SCREEN_H);
 
                 if(game_ending==player_win)textprintf_ex(buffer,font_40,400,20,makecol(0,0,0),-1,"Player wins!");
                 if(game_ending==ai_win)textprintf_ex(buffer,font_40,400,20,makecol(0,0,0),-1,"AI wins!");
@@ -697,15 +751,20 @@ void update(){
 
             }
         }
-        if(key[KEY_F9])change_resolution(640,480);
-        if(key[KEY_F8])change_resolution(800,600);
-        if(key[KEY_F7])change_resolution(1024,768);
-        if(key[KEY_F6])change_resolution(1280,1024);
-        if(key[KEY_F5])change_resolution(1366,768);
-        if(key[KEY_F4])change_resolution(1440,900);
-        if(key[KEY_F3])change_resolution(1600,900);
-        if(key[KEY_F2])change_resolution(1920,1080);
-        if(key[KEY_F1])change_resolution(3840,2160);
+        if(key[KEY_F9] && key[KEY_LCONTROL] || key[KEY_F9] && key[KEY_RCONTROL] )change_resolution(640,480);
+        if(key[KEY_F8] && key[KEY_LCONTROL] || key[KEY_F8] && key[KEY_RCONTROL] )change_resolution(800,600);
+        if(key[KEY_F7] && key[KEY_LCONTROL] || key[KEY_F7] && key[KEY_RCONTROL] )change_resolution(1024,768);
+        if(key[KEY_F6] && key[KEY_LCONTROL] || key[KEY_F6] && key[KEY_RCONTROL] )change_resolution(1280,1024);
+        if(key[KEY_F5] && key[KEY_LCONTROL] || key[KEY_F5] && key[KEY_RCONTROL] )change_resolution(1366,768);
+        if(key[KEY_F4] && key[KEY_LCONTROL] || key[KEY_F4] && key[KEY_RCONTROL] )change_resolution(1440,900);
+        if(key[KEY_F3] && key[KEY_LCONTROL] || key[KEY_F3] && key[KEY_RCONTROL] )change_resolution(1600,900);
+        if(key[KEY_F2] && key[KEY_LCONTROL] || key[KEY_F2] && key[KEY_RCONTROL] )change_resolution(1920,1080);
+        if(key[KEY_F1] && key[KEY_LCONTROL] || key[KEY_F1] && key[KEY_RCONTROL] )change_resolution(3840,2160);
+
+        if(key[KEY_F1])write_stats();
+        if(key[KEY_F3])read_stats();
+        if(key[KEY_F4])reset_stats();
+
 
         //State independent reset key
         if(key[KEY_ESC]){
@@ -731,6 +790,7 @@ void update(){
         draw_sprite(buffer,cursor,mouse_x,mouse_y);
         draw_sprite(screen,buffer,0,0);
 
+
         //Sets the speed of the entire game, DO NOT TOUCH, YOU CAN DIE!
         rest(1);
 
@@ -746,8 +806,15 @@ void update(){
 
 
 
-
 void setup(){
+    //Stat 0 is games played
+
+    ifstream read("stats.txt");
+    for (int i = 0; i < 10; i++){
+        read>>stats[i];
+    }
+    read.close();
+
 
     //The game starts in the main menu
     GAME_STATE=MENU;
